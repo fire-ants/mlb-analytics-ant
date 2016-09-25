@@ -1,0 +1,9 @@
+{
+    "path" : "~/GitHub/mlb-analytics-ant",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}

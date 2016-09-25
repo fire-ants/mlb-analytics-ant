@@ -1,4 +1,6 @@
 ## Test R snippet to begin containerization activities.
+## MLB-Analytics Ant
+## Jason R. Battles, jason.battles@fireants.io
 
 ## load libraries
 library(pitchRx)

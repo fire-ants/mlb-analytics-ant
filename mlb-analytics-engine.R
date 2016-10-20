@@ -113,3 +113,9 @@ p0 = p0 +
 png("545361-HeatMap-YTD.png")
 p0
 dev.off()
+
+##Dan's code
+Sys.setenv( aws_access_key_id ="eygh4lc58iua_us_generic_generic@dpc.emc.com")
+Sys.setenv( aws_secret_access_key ="/J+E6nSCru78ymaOFxQzg9BMLNtkePRcKGTsAhpb")
+system("aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key 545361-HeatMap-YTD.png --body 545361-HeatMap-YTD.png")
+system("aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key 545361-All.png --body 545361-All.png")

@@ -1,6 +1,12 @@
-## Test R snippet to begin containerization activities...
-## MLB-Analytics Ant
-## Jason R. Battles, jason.battles@fireants.io
+## Test R snippet to begin containerization activities.
+
+##installing libraries
+install.packages("XML2R")
+install.packages("pitchRx")
+install.packages("dplyr")
+install.packages("stringr")
+install.packages("ggplot2")
+install.packages("RColorBrewer")
 
 ## load libraries
 library(pitchRx)
@@ -50,12 +56,12 @@ atbat <- tbl_df(dat$atbat)
 
 # combine
 joined <- pitch %>%
-    select(gameday_link, num, des, type, tfs, tfs_zulu,
+    select(gameday_link, num, des, type, tfs, tfs_zulu, 
            id, sz_top, sz_bot, px, pz, pitch_type, count) %>%
-    inner_join(x = .,
+    inner_join(x = ., 
                y = atbat %>%
-                   select(gameday_link, num, pitcher, batter, b_height,
-                          pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning),
+                   select(gameday_link, num, pitcher, batter, b_height, 
+                          pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning), 
                by = c('gameday_link', 'num')) %>%
     mutate(quant_score = get_quant_score(des),
            qual_score = get_qual_score(atbat_des) * (type == 'X'),
@@ -74,7 +80,6 @@ subStrikes <- subset(subTrout, type == "S")
 ## Graphing experiments
 
 ## another example with Color Brewer
-library(graphics)
 library(RColorBrewer)
 png("545361-All.png")
 brewer.pal(11, "RdYlBu")
@@ -88,7 +93,7 @@ dev.off()
 
 ## Add Batter's strike zone
 topKzone = mean(subTrout$sz_top)
-botKzone = mean(subTrout$sz_bot)
+botKzone = mean(subTrout$sz_bot) 
 inKzone = -.95
 outKzone = 0.95
 kZone = data.frame(

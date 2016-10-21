@@ -11,11 +11,12 @@ The MLB Analytics Ant is the Data Analytics component of the MLB Pitchers Friend
 ####**02-TidyData-R**
 
 1. Apply data transformations to the aggregate data frame
-..*Apply Hitter Value per-pitch scoring algorithms (QuantScore & QualScore) to pitches
-..*Transform similar pitch types
-
-    FS / SI / SF -> SI = fastball (sinker, split-fingered)
-    CB / CU -> CU = Curveball
+    - Apply Hitter Value per-pitch scoring algorithms (QuantScore & QualScore) to pitches
+    - Transform similar pitch types
+    | Pitches | Pitch Transformations | Description |
+    | --- | --- |
+    |FS / SI / SF| -> SI |= fastball (sinker, split-fingered)|
+    |CB / CU| -> CU |= Curveball|
     UN / XX / PO / FO -> XX = not applicable
 2. Subset the transformed aggregate data frame for specific batter
 

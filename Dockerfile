@@ -7,7 +7,7 @@ RUN apt-get update \
 		python \
 		python-pip	
 
-COPY mlb-analytics-engine.R .
+COPY /mlb-analytics-engine.R .
 
 RUN pip install awscli
 

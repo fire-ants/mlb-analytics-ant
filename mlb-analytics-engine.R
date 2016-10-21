@@ -1,17 +1,17 @@
 ## Test R snippet to begin containerization activities.
 
 ##installing libraries
-##install.packages("XML2R")
-##install.packages("pitchRx")
-##install.packages("dplyr")
-##install.packages("stringr")
-##install.packages("ggplot2")
-##install.packages("RColorBrewer")
+install.packages("XML2R")
+install.packages("pitchRx")
+install.packages("dplyr")
+install.packages("stringr")
+install.packages("ggplot2")
+install.packages("RColorBrewer")
 
-packages <- c("XML2R", "pitchRx", "dplyr", "stringr", "ggplot2", "RColorBrewer")
-if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
-  install.packages(setdiff(packages, rownames(installed.packages())))  
-}
+##packages <- c("XML2R", "pitchRx", "dplyr", "stringr", "ggplot2", "RColorBrewer")
+##if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
+##  install.packages(setdiff(packages, rownames(installed.packages())))  
+##}
 
 ## load libraries
 library(pitchRx)

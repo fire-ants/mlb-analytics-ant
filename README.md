@@ -2,7 +2,8 @@
 The MLB Analytics Ant is the Data Analytics component of the MLB Pitchers Friend, developed by the Fire Ants.
 
 ## Application Workflow
-These R subroutines will run within the same container
+These R subroutines will run within the same container.
+
 ####01-ObtainData.R
 
 1. Receive 1 variable (mlbID) from the docker run command used to activate the container
@@ -17,13 +18,13 @@ These R subroutines will run within the same container
 
 2. Subset the transformed aggregate data frame for specific batter
 
-####**03-GenerateImages**
+####**03-GenerateImages.R**
 
 1. Generate a traditional Hitter Heat Map for season to date information.
 2. Generate a Hitter Value Heat Map.
 3. Storage these images in Virtustream Storage Cloud.
 
-####**04-Regressison Analysis** *(To Be Developed)*
+####**04-Regressison Analysis.R** *(To Be Developed)*
 
 1. Fit a prediction model to the subset hitter data frame
 2. Create confidence intervals and recommendations on how to defeat hitters.

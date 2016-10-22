@@ -8,11 +8,6 @@ install.packages("stringr")
 install.packages("ggplot2")
 install.packages("RColorBrewer")
 
-##packages <- c("XML2R", "pitchRx", "dplyr", "stringr", "ggplot2", "RColorBrewer")
-##if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
-##  install.packages(setdiff(packages, rownames(installed.packages())))  
-##}
-
 ## load libraries
 library(pitchRx)
 library(dplyr)

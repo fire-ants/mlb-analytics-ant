@@ -1,6 +1,8 @@
 # MLB Analytics Ant
 The MLB Analytics Ant is the Data Analytics component of the MLB Pitchers Friend, developed by the Fire Ants.
 
+The Analytics-Ant connects to the API-Ant to query for pitches on specific batters that are maintained in the Mongo database.
+
 ## Application Workflow
 These R subroutines will run within the same container.
 
@@ -8,7 +10,7 @@ These R subroutines will run within the same container.
 
 1. Receive 1 variable (mlbID) from the docker run command used to activate the container
 2. Make an API call to MLB-API-Ant
-3. Generate aggregate data frame with all pitches and atbat events for the referenced hitter.
+3. Generate aggregate data frame with all pitches and atbat events for the referenced hitter...
 
 ####02-TidyData-R
 

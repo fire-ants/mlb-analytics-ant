@@ -10,7 +10,7 @@ These R subroutines will run within the same container.
 2. Make an API call to MLB-API-Ant
 3. Generate aggregate data frame with all pitches and atbat events for the referenced hitter.
 
-####**02-TidyData-R**
+####02-TidyData-R
 
 1. Apply data transformations to the aggregate data frame
     - Apply Hitter Value per-pitch scoring algorithms (QuantScore & QualScore) to pitches
@@ -18,13 +18,13 @@ These R subroutines will run within the same container.
 
 2. Subset the transformed aggregate data frame for specific batter
 
-####**03-GenerateImages.R**
+####03-GenerateImages.R
 
 1. Generate a traditional Hitter Heat Map for season to date information.
 2. Generate a Hitter Value Heat Map.
 3. Storage these images in Virtustream Storage Cloud.
 
-####**04-Regressison Analysis.R** *(To Be Developed)*
+####04-Regressison Analysis.R *(To Be Developed)*
 
 1. Fit a prediction model to the subset hitter data frame
 2. Create confidence intervals and recommendations on how to defeat hitters.

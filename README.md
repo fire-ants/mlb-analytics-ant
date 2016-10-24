@@ -3,7 +3,7 @@ The **MLB Analytics Ant** is the Data Analytics component of the **MLB Pitchers 
 
 The Analytics-Ant receives a single variable, Major League Baseball Identification Number (**mlbID**), from the Queen-Ant control station.   The Analytics Ant then connects to the API-Ant to query for pitches on specific batters that are maintained in the Mongo database.
 
-Application Flow: ![apflow](https://github.com/fire-ants/mlb-admin/blob/master/admin/mlb-pf-appflow.png)
+![](https://github.com/fire-ants/mlb-admin/blob/master/admin/mlb-pf-appflow.png)
 ## Application Workflow
 These R subroutines will run within the same container.
 

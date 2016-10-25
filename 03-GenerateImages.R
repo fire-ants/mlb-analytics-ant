@@ -95,14 +95,6 @@ for (mlbID in hitters) {
 
 
 
-setwd("C:/Users/cohend/Documents/code/mlb-analytics-ant")
-
-packages <- c("ggplot2", "akima", "wesanderson", "curl")
-if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
-  install.packages(setdiff(packages, rownames(installed.packages())))  
-}
-
-
 ## FF Four-seam fastball
 hv.FF <- data.frame(x = subTrout.FF$px, y = subTrout.FF$pz, z = subTrout.FF$hitter_val)
 hv.FF.grid <- interp(hv.FF$x, hv.FF$y, hv.FF$z)
@@ -112,7 +104,5 @@ ggplot(hv.FF.grid2) + labs(x="x pos",y="z pos") + ggtitle("Mike Trout FF Hitter 
 ## Save plot to working directory in the plots sub-folder
 ggsave("545361_hv_FF.png", device="png", path="plots/")
 
-Sys.setenv( aws_access_key_id ="eygh4lc58iua_us_generic_generic@dpc.emc.com")
-Sys.setenv( aws_secret_access_key ="/J+E6nSCru78ymaOFxQzg9BMLNtkePRcKGTsAhpb")
 system("aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key 545361_hv_FF.png --body ./plots/545361_hv_FF.png")
 

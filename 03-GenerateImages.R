@@ -1,3 +1,11 @@
+## load libraries
+library(ggplot2)
+library(pitchRx)
+library(dplyr)
+library(stringr)
+library(graphics)
+library(RColorBrewer)
+
 # load Quantitative and Qualitative Scoring Functions Functions
 get_quant_score <- function(des) {
   score <- (
@@ -63,46 +71,45 @@ filterMLBData <- function(mlbData, mlbID) {
   return (subJoined)
 }
 
-create_plots <- function(data) {
+create_plots <- function(data, mlbID, ...) {
   filename = str_c(mlbID,"-ALL.png")
-  
   png(filename)
   brewer.pal(11, "RdYlBu")
   buylrd <- c("#313695", "#4575B4", "#74ADD1", "#ABD9E9", "#E0F3F8", "#FFFFBF", "#FEE090", "#FDAE61", "#F46D43", "#D73027", "#A50026")
   smoothScatter(data$pz~data$px, nbin=1000, colramp = colorRampPalette(c(buylrd)), nrpoints=Inf, pch="", cex=.7, transformation = function(x) x^.6, col="black", main="Pitch Locations", xlab="Horizontal Location", ylab="Vertical Location")
-  lines(c(0.708335, 0.708335), c(mean(subTrout$sz_bot), mean(subTrout$sz_top)), col="white", lty="dashed", lwd=2)
-  lines(c(-0.708335, -0.708335), c(mean(subTrout$sz_bot), mean(subTrout$sz_top)), col="white", lty="dashed", lwd=2)
-  lines(c(-0.708335, 0.708335), c(mean(subTrout$sz_bot), mean(subTrout$sz_bot)), col="white", lty="dashed", lwd=2)
-  lines(c(-0.708335, 0.708335), c(mean(subTrout$sz_top), mean(subTrout$sz_top)), col="white", lty="dashed", lwd=2)
+  lines(c(0.708335, 0.708335), c(mean(data$sz_bot), mean(data$sz_top)), col="white", lty="dashed", lwd=2)
+  lines(c(-0.708335, -0.708335), c(mean(data$sz_bot), mean(data$sz_top)), col="white", lty="dashed", lwd=2)
+  lines(c(-0.708335, 0.708335), c(mean(data$sz_bot), mean(data$sz_bot)), col="white", lty="dashed", lwd=2)
+  lines(c(-0.708335, 0.708335), c(mean(data$sz_top), mean(data$sz_top)), col="white", lty="dashed", lwd=2)
   dev.off()
   
-  
-  
+  ## print(sprintf("aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s-All.png --body %1$s-All.png", mlbID))
+  system(sprintf("aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s-All.png --body %1$s-All.png", mlbID))
 }
+
+## used to set working directory on development box
+## plot images will save to path relative to working directory 
+## system calls will execute in working directory also
+## setwd("./code/mlb-a-a-local/")
+
+## UPDATE LIST OF HITTERS & SAVE to rds file "hitters.rds"
+## hitters <- c('545361','547180','457705','502671','518626')
+## saveRDS(hitters, "hitters.rds", ascii=TRUE)
+
+## MAIN Program
+hitters <- readRDS("hitters.rds")
 
 mlbdata <- pullMLBDataAndScore()
 
-hitters <- c('545361','543606')
-
 for (mlbID in hitters) {
   print(mlbID)
-  data <- filterMLBData(mlbdata, '545361')
-  
-  create_plots(data,mlbID)
-  
+  data <- filterMLBData(mlbdata, mlbID)
+  create_plots(data, mlbID)
 }
 
+## END MAIN Program
 
-
-
-setwd("C:/Users/cohend/Documents/code/mlb-analytics-ant")
-
-packages <- c("ggplot2", "akima", "wesanderson", "curl")
-if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
-  install.packages(setdiff(packages, rownames(installed.packages())))  
-}
-
-
+## CODE yet to incorporate
 ## FF Four-seam fastball
 hv.FF <- data.frame(x = subTrout.FF$px, y = subTrout.FF$pz, z = subTrout.FF$hitter_val)
 hv.FF.grid <- interp(hv.FF$x, hv.FF$y, hv.FF$z)
@@ -111,8 +118,4 @@ hv.FF.grid2$z <- as.vector(hv.FF.grid$z)
 ggplot(hv.FF.grid2) + labs(x="x pos",y="z pos") + ggtitle("Mike Trout FF Hitter Value") + geom_tile(aes(x = x, y = y, z = z, fill = z) ) + coord_equal() + geom_contour(aes(x = x, y = y, z = z, fill = z), color = "white", alpha = .3) + scale_fill_gradientn(name="Hitter\nValue",colors=pal, na.value="white", limits=c(min(subTrout$hitter_val),max(subTrout$hitter_val))) + geom_path(aes(x, y), data = kZone, linetype = 2) + coord_cartesian(xlim=c(-1.5,1.5),ylim=c(1,4)) + theme_bw()
 ## Save plot to working directory in the plots sub-folder
 ggsave("545361_hv_FF.png", device="png", path="plots/")
-
-Sys.setenv( aws_access_key_id ="eygh4lc58iua_us_generic_generic@dpc.emc.com")
-Sys.setenv( aws_secret_access_key ="/J+E6nSCru78ymaOFxQzg9BMLNtkePRcKGTsAhpb")
-system("aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key 545361_hv_FF.png --body ./plots/545361_hv_FF.png")
 

@@ -9,11 +9,12 @@ install.packages("ggplot2")
 install.packages("RColorBrewer")
 
 ## load libraries
+library(ggplot2)
 library(pitchRx)
 library(dplyr)
 library(stringr)
-library(ggplot2)
 library(graphics)
+library(RColorBrewer)
 
 # load Quantitative and Qualitative Scoring Functions Functions
 get_quant_score <- function(des) {

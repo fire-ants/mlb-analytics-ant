@@ -1,6 +1,10 @@
 # MLB Pitchers Friend
 
-The **MLB Pitchers Friend**
+*"Helping hitters become batters...and then siting them back down"*
+
+The **MLB Pitchers Friend** uses data analytics techniques to visualize hitting characteristics for specific Major League Baseball (MLB) players.  Future releases will perform regression modeling and principal component analysis (PCA) to recommend specific pitching techniques to defeat them.
+
+**MLB Pitchers Friend** uses a cloud-based, microservice architecture.  The major components are described below.
 
 * [Queen Ant](https://github.com/fire-ants/mlb-crawler-ant)
 blah blah blah

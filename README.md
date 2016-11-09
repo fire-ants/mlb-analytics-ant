@@ -1,8 +1,8 @@
 # MLB Pitchers Friend
-[
+
 *"Helping hitters become batters...and then sitting them back down"*
 
-## [MLB Project Description](https://github.com/fire-ants/mlb-admin/blob/master/README.md)
+### [Full Project Description](https://github.com/fire-ants/mlb-admin/blob/master/README.md)
 
 # MLB Analytics Ant
 The **MLB Analytics Ant** is the Data Analytics component of the **MLB Pitchers Friend**, developed by the **Fire Ants**.

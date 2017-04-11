@@ -7,36 +7,47 @@ library(graphics)
 library(RColorBrewer)
 
 # load Quantitative and Qualitative Scoring Functions Functions
+# Quant scored in terms of Out (-1) and Hit (1)
 get_quant_score <- function(des) {
-  score <- (
-    as.integer(str_detect(des, "Called Strike")) * -(1/3) +
-      as.integer(str_detect(des, "Foul")) * -(1/3) +
-      as.integer(str_detect(des, "In play, run")) * 1.0 +
-      as.integer(str_detect(des, "In play, out")) * 0.0 +
-      as.integer(str_detect(des, "In play, no out")) * 1.0 +
-      as.integer(str_detect(des, "^Ball$")) * 0.25 +
-      as.integer(str_detect(des, "Swinging Strike")) * -(1/3) +
-      as.integer(str_detect(des, "Hit By Pitch")) * 1.0 +
-      as.integer(str_detect(des, "Ball in Dirt")) * 0.25 +
-      as.integer(str_detect(des, "Missed Bunt")) * -(1/3) +
-      as.integer(str_detect(des, "Intent Ball")) * 0.25
-  )
-  return(score)
+    score <- (
+        as.integer(str_detect(des, "Called Strike")) * -(1/3) +
+            as.integer(str_detect(des, "Foul")) * -(1/3) +
+            as.integer(str_detect(des, "In play, run")) * 1.0 +
+            as.integer(str_detect(des, "In play, out")) * -1.0 +
+            as.integer(str_detect(des, "In play, no out")) * 1.0 +
+            as.integer(str_detect(des, "^Ball$")) * 0.25 +
+            as.integer(str_detect(des, "Swinging Strike")) * -(1/3) +
+            as.integer(str_detect(des, "Hit By Pitch")) * 1.0 +
+            as.integer(str_detect(des, "Ball In Dirt")) * 0.25 +
+            as.integer(str_detect(des, "Missed Bunt")) * -(1/3) +
+            as.integer(str_detect(des, "Intent Ball")) * 0.25
+    )
+    return(score)
 }
 get_qual_score <- function(des) {
-  score <- (
-    as.integer(str_detect(des, "homer")) * 2 +
-      as.integer(str_detect(des, "line")) * 1 +
-      as.integer(str_detect(des, "sharp")) * 1 +
-      as.integer(str_detect(des, "grounds")) * -1 +
-      as.integer(str_detect(des, "flies")) * -1 +
-      as.integer(str_detect(des, "soft")) * -2 +
-      as.integer(str_detect(des, "pop")) * -2 +
-      as.integer(str_detect(des, "triples")) * 1.5 +
-      as.integer(str_detect(des, "doubles")) * 1.0 +
-      as.integer(str_detect(des, "error")) * 0.5
-  )
-  return(score)
+    score <- (
+        as.integer(str_detect(des, "homer")) * 2 +
+            as.integer(str_detect(des, "line")) * 1.5 +
+            as.integer(str_detect(des, "sharp")) * 1.5 +
+            as.integer(str_detect(des, "grounds")) * -1 +
+            as.integer(str_detect(des, "flies")) * -1 +
+            as.integer(str_detect(des, "soft")) * -2 +
+            as.integer(str_detect(des, "pop")) * -2 +
+            as.integer(str_detect(des, "triples")) * 1.5 +
+            as.integer(str_detect(des, "doubles")) * 1.0 +
+            as.integer(str_detect(des, "error")) * 0.5
+    )
+    return(score)
+}
+
+# Resolve incorrect Quant score when Batter is out but Runs scored
+fix_quant_score <- function(event) {
+    score <- (
+        as.integer(str_detect(event, "Groundout")) * -2 +
+        as.integer(str_detect(event, "Forceout")) * -2 +
+        as.integer(str_detect(event, "Field Error")) * -2 
+    )
+    return(score)
 }
 
 pullMLBDataAndScore <- function() {
@@ -56,7 +67,9 @@ pullMLBDataAndScore <- function() {
                  select(gameday_link, num, pitcher, batter, b_height, 
                         pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning), 
                by = c('gameday_link', 'num')) %>%
-    mutate(quant_score = get_quant_score(des),
+    mutate(quant_score_des = get_quant_score(des),
+           fix_quant_score = fix_quant_score(event) * (des == 'In play, run(s)'),
+           quant_score = quant_score_des + fix_quant_score,
            qual_score = get_qual_score(atbat_des) * (type == 'X'),
            hitter_val = quant_score + qual_score)
   

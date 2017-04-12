@@ -107,6 +107,9 @@ create_plots <- function(data, mlbID, ...) {
 
 ## UPDATE LIST OF HITTERS & SAVE to rds file "hitters.rds"
 ## hitters <- c('545361','547180','457705','502671','518626')
+## hitters <- c('545361','547180','457705','502671','518626',545361  Trout
+
+hittersLst <- c('547180','457705','502671','518626','502517','518934','467092','445988','471865','120074','514888')
 ## saveRDS(hitters, "hitters.rds", ascii=TRUE)
 
 ## MAIN Program

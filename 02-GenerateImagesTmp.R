@@ -8,6 +8,12 @@ library(RColorBrewer)
 library(akima)
 #library(wesanderson)
 
+create_HeatMap_plots <- function(data, mlbID, ...) {
+    
+    create_HeatMap_plots(subAllBallsInPlay, mlbID)
+    
+}
+
 create_heatmap_plots <- function(data, mlbID, ...) {
     # data <- joined
     
@@ -189,21 +195,51 @@ for (mlbID in hitters) {
     )
     
     # create Traditional Heat Map
-    strikeFX(subAllBallsInPlay, geom = "raster", density1 = list(type = "X"),
-             density2 = list(quant_score = 1), layer = facet_grid(pitch_type ~ p_throws, labeller = labeller(p_throws = pitch_label)))
+    #strikeFX(subAllBallsInPlay, geom = "raster", density1 = list(type = "X"),
+    #         density2 = list(quant_score = 1), layer = facet_grid(pitch_type ~ p_throws, labeller = labeller(p_throws = pitch_label)))
+    
+    #strikeFX(subAllBallsInPlay, geom = "raster", density1 = list(type = "X"),
+    #         density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, labeller = labeller(p_throws = pitch_label)))
+    
+    #strikeFX(subAllBallsInPlay, geom = "raster", density1 = list(type = "X"),
+    #         density2 = list(type = "X"), layer = facet_grid(. ~ stand, labeller = labeller(p_throws = pitch_label)))
+    
+    #strikeFX(subAllBallsInPlay, geom = "raster", density1 = list(type = "X"),
+    #         density2 = list(quant_score = 1), layer = facet_grid(. ~ stand, labeller = labeller(p_throws = pitch_label)))
+    
+    
     
     strikeFX(subAllBallsInPlay, geom = "raster", density1 = list(type = "X"),
              density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, labeller = labeller(p_throws = pitch_label)))
     
+    #png(filename = "bat-test.png")
     strikeFX(subAllBallsInPlay, geom = "raster", density1 = list(type = "X"),
-             density2 = list(type = "X"), layer = facet_grid(. ~ stand, labeller = labeller(p_throws = pitch_label)))
+             density2 = list(quant_score = 1), layer = facet_grid(pitch_type ~ p_throws))
+    #dev.off()
     
-    strikeFX(subAllBallsInPlay, geom = "raster", density1 = list(type = "X"),
-             density2 = list(quant_score = 1), layer = facet_grid(. ~ stand, labeller = labeller(p_throws = pitch_label)))
+    subABIP.FF <- subAllBallsInPlay %>% filter(pitch_type=="FF")
+    subABIP.RHP <- subAllBallsInPlay %>% filter(p_throws=="R")
     
-    strikeFX(subAllBallsInPlay, geom = "raster", density1 = list(type = "X"),
-             density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, labeller = labeller(p_throws = pitch_label)))
+    subABIP.FF.RHP <- subABIP.FF %>% filter(p_throws=="R")
+    subABIP.FF.LHP <- subABIP.FF %>% filter(p_throws=="L")
+    
+    strikeFX(subABIP.FF.RHP, geom = "hex", density1 = list(type = "X"),
+             density2 = list(quant_score = 1))
+    
+    strikeFX(subABIP.FF.RHP, geom = "raster", density1 = list(type = "X"),
+             density2 = list(quant_score = 1), layer = facet_grid(pitch_type ~ p_throws))
+    
+    strikeFX(subABIP.FF.LHP, geom = "raster", density1 = list(type = "X"),
+             density2 = list(quant_score = 1), layer = facet_grid(pitch_type ~ p_throws))
+    
+    strikeFX(subABIP.FF.LHP, geom = "hex", density1 = list(type = "X"),
+             density2 = list(quant_score = 1))
+    
+    strikeFX(subABIP.RHP, geom = "raster", density1 = list(type = "X"),
+             density2 = list(quant_score = 1), layer = facet_grid(pitch_type ~ ., labeller = labeller(p_throws = pitch_label)))
+    
     
     # generate plots
-    create_heatmap_plots(joined,mlbID)
+    create_HeatMap_plots(subAllBallsInPlay, mlbID)
+    create_HV_plots(joined,mlbID)
 }

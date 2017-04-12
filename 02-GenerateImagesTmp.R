@@ -5,17 +5,83 @@ library(dplyr)
 library(stringr)
 library(graphics)
 library(RColorBrewer)
+library(akima)
+#library(wesanderson)
 
 create_plots <- function(data, mlbID, ...) {
+    # data <- joined
+    
     filename = str_c(mlbID,"-ALL.png")
     png(filename)
-    brewer.pal(11, "RdYlBu")
-    buylrd <- c("#313695", "#4575B4", "#74ADD1", "#ABD9E9", "#E0F3F8", "#FFFFBF", "#FEE090", "#FDAE61", "#F46D43", "#D73027", "#A50026")
-    smoothScatter(data$pz~data$px, nbin=1000, colramp = colorRampPalette(c(buylrd)), nrpoints=Inf, pch="", cex=.7, transformation = function(x) x^.6, col="black", main="Pitch Locations", xlab="Horizontal Location", ylab="Vertical Location")
-    lines(c(0.708335, 0.708335), c(mean(data$sz_bot), mean(data$sz_top)), col="white", lty="dashed", lwd=2)
-    lines(c(-0.708335, -0.708335), c(mean(data$sz_bot), mean(data$sz_top)), col="white", lty="dashed", lwd=2)
-    lines(c(-0.708335, 0.708335), c(mean(data$sz_bot), mean(data$sz_bot)), col="white", lty="dashed", lwd=2)
-    lines(c(-0.708335, 0.708335), c(mean(data$sz_top), mean(data$sz_top)), col="white", lty="dashed", lwd=2)
+    brewer.pal(3, "RdBu")
+    #wes_palette("Zissou")
+    #pal <- wes_palette("Zissou", 100, type = "continuous")
+    ## Add Batter's strike zone
+    ## not required if loading workspace workspace_tables_with_pitch_type
+    topKzone = mean(data$sz_top, na.rm = TRUE)
+    botKzone = mean(data$sz_bot, na.rm = TRUE) 
+    inKzone = -.95
+    outKzone = 0.95
+    kZone = data.frame(
+        x = c(inKzone, inKzone, outKzone, outKzone, inKzone), 
+        y = c(botKzone, topKzone, topKzone, botKzone, botKzone)
+    )
+    
+    ## Filter out by Batter and Pitch Type
+    ## not required if loading workspace workspace_tables_with_pitch_type
+    sub.FF <- joined %>% filter(pitch_type=="FF")
+    sub.FF.RHP <- sub.FF %>% filter(p_throws=="R")
+    sub.FF.LHP <- sub.FF %>% filter(p_throws=="L")
+    sub.SL <- joined %>% filter(pitch_type=="SL")
+    sub.CH <- joined %>% filter(pitch_type=="CH")
+    sub.CU <- joined %>% filter(pitch_type=="CU")
+    #sub.FC <- joined %>% filter(batter=="545361",pitch_type=="FC")
+    #sub.FT <- joined %>% filter(batter=="545361",pitch_type=="FT")
+    sub.SI <- joined %>% filter(pitch_type=="SI")
+    #sub.FS <- joined %>% filter(batter=="545361",pitch_type=="FS")
+    
+    ## FF Four-seam fastball - RHP
+    hv.FF <- data.frame(x = sub.FF.RHP$px, y = sub.FF.RHP$pz, z = sub.FF.RHP$hitter_val)
+    hv.FF.grid <- interp(hv.FF$x, hv.FF$y, hv.FF$z)
+    hv.FF.grid2 <- expand.grid(x=hv.FF.grid$x, y=hv.FF.grid$y)
+    hv.FF.grid2$z <- as.vector(hv.FF.grid$z)
+    
+    b1 <- colorRampPalette(c("navy","royalblue","white"))(200)
+    re <- colorRampPalette(c("white","red2","darkred"))(200)
+    
+    ggplot(hv.FF.grid2) + labs(x="x pos",y="z pos") + ggtitle("FF Hitter Value - RHP") + 
+        geom_tile(aes(x = x, y = y, z = z, fill = z) ) + coord_equal() + 
+        geom_contour(aes(x = x, y = y, z = z, fill = z), color = "white", alpha = .3) + 
+        scale_fill_gradientn(name="Hitter\nValue",colors=c(b1,"white",re), na.value="white", limits=c(min(data$hitter_val),max(data$hitter_val))) + 
+        geom_path(aes(x, y), data = kZone, linetype = 2) + coord_cartesian(xlim=c(-1.5,1.5),ylim=c(1,4)) + 
+        theme_bw()
+ 
+    ## Save plot to working directory in the plots sub-folder
+    filename = str_c(mlbID,"-rhp-hm-FF.png")
+    #png(filename)
+    ggsave(filename, device="png", path="plots/")
+    dev.off()
+    
+    ## FF Four-seam fastball - LHP
+    hv.FF <- data.frame(x = sub.FF.LHP$px, y = sub.FF.LHP$pz, z = sub.FF.LHP$hitter_val)
+    hv.FF.grid <- interp(hv.FF$x, hv.FF$y, hv.FF$z)
+    hv.FF.grid2 <- expand.grid(x=hv.FF.grid$x, y=hv.FF.grid$y)
+    hv.FF.grid2$z <- as.vector(hv.FF.grid$z)
+    
+    b1 <- colorRampPalette(c("navy","royalblue","white"))(200)
+    re <- colorRampPalette(c("white","red2","darkred"))(200)
+    
+    ggplot(hv.FF.grid2) + labs(x="x pos",y="z pos") + ggtitle("FF Hitter Value - LHP") + 
+        geom_tile(aes(x = x, y = y, z = z, fill = z) ) + coord_equal() + 
+        geom_contour(aes(x = x, y = y, z = z, fill = z), color = "white", alpha = .3) + 
+        scale_fill_gradientn(name="Hitter\nValue",colors=c(b1,"white",re), na.value="white", limits=c(min(data$hitter_val),max(data$hitter_val))) + 
+        geom_path(aes(x, y), data = kZone, linetype = 2) + coord_cartesian(xlim=c(-1.5,1.5),ylim=c(1,4)) + 
+        theme_bw()
+    
+    ## Save plot to working directory in the plots sub-folder
+    filename = str_c(mlbID,"-lhp-hm-FF.png")
+    #png(filename)
+    ggsave(filename, device="png", path="plots/")
     dev.off()
     
     ## print(sprintf("aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s-All.png --body %1$s-All.png", mlbID))
@@ -23,8 +89,9 @@ create_plots <- function(data, mlbID, ...) {
 }
 
 hittersLst <- c('547180','457705','502671','518626','502517','518934','467092','445988','471865','120074','514888')
+hitters <- c('518626')
 #mlbdata <- pullMLBDataAndScore()
-
+mlbID <- '518626'
 
 for (mlbID in hitters) {
     print(mlbID)
@@ -68,6 +135,14 @@ for (mlbID in hitters) {
     strikeFX(subAllBallsInPlay, geom = "raster", density1 = list(type = "X"),
              density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, labeller = labeller(p_throws = pitch_label)))
     
+    strikeFX(subAllBallsInPlay, geom = "raster", density1 = list(type = "X"),
+             density2 = list(type = "X"), layer = facet_grid(. ~ stand, labeller = labeller(p_throws = pitch_label)))
+    
+    strikeFX(subAllBallsInPlay, geom = "raster", density1 = list(type = "X"),
+             density2 = list(quant_score = 1), layer = facet_grid(. ~ stand, labeller = labeller(p_throws = pitch_label)))
+    
+    strikeFX(subAllBallsInPlay, geom = "raster", density1 = list(type = "X"),
+             density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, labeller = labeller(p_throws = pitch_label)))
     
     # generate plots
     create_plots(joined,mlbID)

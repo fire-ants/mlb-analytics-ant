@@ -8,14 +8,14 @@ library(RColorBrewer)
 
 
 ## Use dplyer to create SQLite database
-library(dplyr)
+#library(dplyr)
 my_db1 <- src_sqlite("pitchRx.sqlite3", create = TRUE)
 
 #confirm empty
 my_db1
 
 ## scrape 2016 game data and store in the database
-library(pitchRx)
+#library(pitchRx)
 scrape(start = "2016-04-03", end = "2016-11-02", suffix = "inning/inning_all.xml", connect = my_db1$con)
 
 

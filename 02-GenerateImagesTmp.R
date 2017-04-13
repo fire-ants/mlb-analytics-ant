@@ -55,8 +55,8 @@ fix_quant_score <- function(event) {
 #data.fin.month <- scrape(start = "2016-09-25", end = "2016-10-24", connect = my_db1$con)
 #data.season 
 
-pitch16 <- select(tbl(my_db1, "pitch"), gameday_link, num, des, type, tfs, tfs_zulu, id, sz_top, sz_bot, px, pz, pitch_type, count, zone)
-atbat16 <- select(tbl(my_db1, "atbat"), gameday_link, num, pitcher, batter, b_height, pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning, inning_side)
+#pitch16 <- select(tbl(my_db1, "pitch"), gameday_link, num, des, type, tfs, tfs_zulu, id, sz_top, sz_bot, px, pz, pitch_type, count, zone)
+#atbat16 <- select(tbl(my_db1, "atbat"), gameday_link, num, pitcher, batter, b_height, pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning, inning_side)
 
 
 
@@ -551,5 +551,5 @@ for (mlbID in hitters) {
   
     # generate plots
     create_hv_plots(joined,mlbID)
-    #create_HeatMap_plots(subAllBallsInPlay, mlbID)
+    create_HeatMap_plots(subAllBallsInPlay, mlbID)
 }

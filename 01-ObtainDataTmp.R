@@ -6,6 +6,8 @@ library(stringr)
 library(graphics)
 library(RColorBrewer)
 
+
+
 ## Use dplyer to create SQLite database
 #library(dplyr)
 my_db1 <- src_sqlite("pitchRx.sqlite3", create = TRUE)

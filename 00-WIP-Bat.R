@@ -1,4 +1,5 @@
 # This function creates Traditional Heat Maps. Receive subAllBallsInPlay as subAPIB.   Also mlbID.
+
 create_HeatMap_plots <- function(subABIP, mlbID, ...) {
     
     # update labeler function for graphs if needed
@@ -20,6 +21,7 @@ create_HeatMap_plots <- function(subABIP, mlbID, ...) {
     subABIP.RHP.SI <- subABIP.RHP %>% filter(pitch_type=="SI")
     subABIP.RHP.CH <- subABIP.RHP %>% filter(pitch_type=="CH")
     subABIP.RHP.KN <- subABIP.RHP %>% filter(pitch_type=="KN")
+    
     subABIP.LHP.FF <- subABIP.LHP %>% filter(pitch_type=="FF")
     subABIP.LHP.SL <- subABIP.LHP %>% filter(pitch_type=="SL")
     subABIP.LHP.CU <- subABIP.LHP %>% filter(pitch_type=="CU")
@@ -27,8 +29,8 @@ create_HeatMap_plots <- function(subABIP, mlbID, ...) {
     subABIP.LHP.CH <- subABIP.LHP %>% filter(pitch_type=="CH")
     subABIP.LHP.KN <- subABIP.LHP %>% filter(pitch_type=="KN")    
     
-    strikeFX(subAllBallsInPlay, geom = "raster", density1 = list(type = "X"),
-             density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, labeller = labeller(p_throws = pitch_label)))
+    #strikeFX(subAllBallsInPlay, geom = "raster", density1 = list(type = "X"),
+    #         density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, labeller = labeller(p_throws = pitch_label)))
     
     # generate Heat Map per p_throws and per p_type
     ## Save plot to working directory in the plots sub-folder
@@ -37,42 +39,74 @@ create_HeatMap_plots <- function(subABIP, mlbID, ...) {
     ggsave(filename, device="png", path="plots/", width = 7, height = 7)
     strikeFX(subABIP.RHP.FF, geom = "raster", density1 = list(type = "X"),
         density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, 
-        labeller = labeller(p_throws = pitch_label))) + 
+        labeller = labeller(p_throws = pitFF_label))) + 
         theme(legend.position="none") + 
         coord_cartesian(xlim=c(-1.5,1.5),ylim=c(1,4)) +
         theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
         ggtitle("FF Heat Map - RHP")
-    #dev.off()
     
-
-    strikeFX(subABIP.RHP.FF, geom = "raster", density1 = list(type = "X"),
+    filename = str_c(mlbID,"-rhp-hm-SL.png")
+    ggsave(filename, device="png", path="plots/", width = 7, height = 7)
+    strikeFX(subABIP.RHP.SL, geom = "raster", density1 = list(type = "X"),
         density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, 
         labeller = labeller(p_throws = pitch_label))) + 
         theme(legend.position="none") + 
         coord_cartesian(xlim=c(-1.5,1.5),ylim=c(1,4)) +
         theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
-        ggtitle("FF Heat Map - RHP")
+        ggtitle("SL Heat Map - RHP")
     
-    strikeFX(subABIP.FF.RHP, geom = "hex", density1 = list(type = "X"),
-             density2 = list(quant_score = 1))
+    filename = str_c(mlbID,"-rhp-hm-KN.png")
+    ggsave(filename, device="png", path="plots/", width = 7, height = 7)
+    strikeFX(subABIP.RHP.KN, geom = "raster", density1 = list(type = "X"),
+        density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, 
+        labeller = labeller(p_throws = pitch_label))) + 
+        theme(legend.position="none") + 
+        coord_cartesian(xlim=c(-1.5,1.5),ylim=c(1,4)) +
+        theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
+        ggtitle("KN Heat Map - RHP")
     
-    strikeFX(subABIP.FF.RHP, geom = "raster", density1 = list(type = "X"),
-             density2 = list(quant_score = 1), layer = facet_grid(pitch_type ~ p_throws))
+    filename = str_c(mlbID,"-rhp-hm-CU.png")
+    ggsave(filename, device="png", path="plots/", width = 7, height = 7)
+    strikeFX(subABIP.RHP.CU, geom = "raster", density1 = list(type = "X"),
+        density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, 
+        labeller = labeller(p_throws = pitch_label))) + 
+        theme(legend.position="none") + 
+        coord_cartesian(xlim=c(-1.5,1.5),ylim=c(1,4)) +
+        theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
+        ggtitle("CU Heat Map - RHP")
     
-    strikeFX(subABIP.FF.LHP, geom = "raster", density1 = list(type = "X"),
-             density2 = list(quant_score = 1), layer = facet_grid(pitch_type ~ p_throws))
+    filename = str_c(mlbID,"-rhp-hm-SI.png")
+    ggsave(filename, device="png", path="plots/", width = 7, height = 7)
+    strikeFX(subABIP.RHP.SI, geom = "raster", density1 = list(type = "X"),
+        density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, 
+        labeller = labeller(p_throws = pitch_label))) + 
+        theme(legend.position="none") + 
+        coord_cartesian(xlim=c(-1.5,1.5),ylim=c(1,4)) +
+        theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
+        ggtitle("SI Heat Map - RHP")
     
-    strikeFX(subABIP.FF.LHP, geom = "hex", density1 = list(type = "X"),
-             density2 = list(quant_score = 1))
+    filename = str_c(mlbID,"-rhp-hm-CH.png")
+    ggsave(filename, device="png", path="plots/", width = 7, height = 7)
+    strikeFX(subABIP.RHP.CH, geom = "raster", density1 = list(type = "X"),
+        density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, 
+        labeller = labeller(p_throws = pitch_label))) + 
+        theme(legend.position="none") + 
+        coord_cartesian(xlim=c(-1.5,1.5),ylim=c(1,4)) +
+        theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
+        ggtitle("CH Heat Map - RHP")
     
-    strikeFX(subABIP.RHP, geom = "raster", density1 = list(type = "X"),
-             density2 = list(quant_score = 1), layer = facet_grid(pitch_type ~ p_throws, labeller = labeller(p_throws = pitch_label)))
     
+    
+   
+    
+    
+    
+    
+    
+    
+    
+    
+    dev.off()
     
 }
-
-
-
-subABIP.FF <- subAllBallsInPlay %>% filter(pitch_type=="FF")
-
-
+    

@@ -6,6 +6,7 @@ library(stringr)
 library(graphics)
 library(RColorBrewer)
 
+setwd("C:/Users/cohend/Documents/code/mlbab")
 
 ## Use dplyer to create SQLite database
 #library(dplyr)

@@ -1,108 +1,78 @@
-
-library(tidyjson)   # this library
-library(dplyr)      # for %>% and other dplyr functions
-library(jsonlite)
-library(httr)
-
-purch_json <- '
-[
-    {
-    "name": "bob", 
-    "purchases": [
-    {
-    "date": "2014/09/13",
-    "items": [
-    {"name": "shoes", "price": 187},
-    {"name": "belt", "price": 35}
-    ]
-    }
-    ]
-    },
-    {
-    "name": "susan", 
-    "purchases": [
-    {
-    "date": "2014/10/01",
-    "items": [
-    {"name": "dress", "price": 58},
-    {"name": "bag", "price": 118}
-    ]
-    },
-    {
-    "date": "2015/01/03",
-    "items": [
-    {"name": "shoes", "price": 115}
-    ]
-    }
-    ]
-    }
-]'
+# This function creates Traditional Heat Maps. Receive subAllBallsInPlay as subAPIB.   Also mlbID.
+create_HeatMap_plots <- function(subABIP, mlbID, ...) {
     
-# Parse the JSON into a data.frame
-purch_df <- jsonlite::fromJSON(purch_json, simplifyDataFrame = TRUE)
-# Examine results
-purch_df
+    # update labeler function for graphs if needed
+    pitch_label <- c(
+        L = "",
+        R = ""
+    )
+    
+    #subABIP <- subAllBallsInPlay
+    
+    # subset All Balls in Play by LHP, RHP
+    subABIP.RHP <- subABIP %>% filter(p_throws=="R")
+    subABIP.LHP <- subABIP %>% filter(p_throws=="L")
+   
+     # subset All Balls in Play by pitch type.
+    subABIP.RHP.FF <- subABIP.RHP %>% filter(pitch_type=="FF")
+    subABIP.RHP.SL <- subABIP.RHP %>% filter(pitch_type=="SL")
+    subABIP.RHP.CU <- subABIP.RHP %>% filter(pitch_type=="CU")
+    subABIP.RHP.SI <- subABIP.RHP %>% filter(pitch_type=="SI")
+    subABIP.RHP.CH <- subABIP.RHP %>% filter(pitch_type=="CH")
+    subABIP.RHP.KN <- subABIP.RHP %>% filter(pitch_type=="KN")
+    subABIP.LHP.FF <- subABIP.LHP %>% filter(pitch_type=="FF")
+    subABIP.LHP.SL <- subABIP.LHP %>% filter(pitch_type=="SL")
+    subABIP.LHP.CU <- subABIP.LHP %>% filter(pitch_type=="CU")
+    subABIP.LHP.SI <- subABIP.LHP %>% filter(pitch_type=="SI")
+    subABIP.LHP.CH <- subABIP.LHP %>% filter(pitch_type=="CH")
+    subABIP.LHP.KN <- subABIP.LHP %>% filter(pitch_type=="KN")    
+    
+    strikeFX(subAllBallsInPlay, geom = "raster", density1 = list(type = "X"),
+             density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, labeller = labeller(p_throws = pitch_label)))
+    
+    # generate Heat Map per p_throws and per p_type
+    ## Save plot to working directory in the plots sub-folder
+    
+    filename = str_c(mlbID,"-rhp-hm-FF.png")
+    ggsave(filename, device="png", path="plots/", width = 7, height = 7)
+    strikeFX(subABIP.RHP.FF, geom = "raster", density1 = list(type = "X"),
+        density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, 
+        labeller = labeller(p_throws = pitch_label))) + 
+        theme(legend.position="none") + 
+        coord_cartesian(xlim=c(-1.5,1.5),ylim=c(1,4)) +
+        theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
+        ggtitle("FF Heat Map - RHP")
+    #dev.off()
+    
 
-jsonlite::fromJSON(people, simplifyDataFrame = TRUE)
-
-purch_items <- purch_json %>%
-    gather_array %>%                                     # stack the users 
-    spread_values(person = jstring("name")) %>%          # extract the user name
-    enter_object("purchases") %>% gather_array %>%       # stack the purchases
-    spread_values(purchase.date = jstring("date")) %>%   # extract the purchase date
-    enter_object("items") %>% gather_array %>%           # stack the items
-    spread_values(                                       # extract item name and price
-        item.name = jstring("name"),
-        item.price = jnumber("price")
-    ) %>%
-    select(person, purchase.date, item.name, item.price) # select only what is needed
-
-
-
-jsonBtr <- GET("http://67.205.147.49/atbat/batter/58b7a70a997e47000f72fa16")
-jsontxt <- content(jsonBtr, "text")
-
-hv_items <- jsontxt %>%
-    gather_array %>%                                     # stack the users 
-    #spread_values(id = jstring("_id")) %>% 
-    #enter_object("pitcher") %>% gather_array %>%       # stack the purchases
-    #spread_values(                                       # extract item name and price
-    #    pitcher.id = jstring("_id"),
-    #    pitcher.birth = jstring("birthDate"),
-    #    pitcher.lname = jstring("lastName"),
-    #    pitcher.fname = jstring("firstName"),
-    #    pitcher.mlbid = jnumber("mlbid"),
-    #    pitcher.v = jstring("__v")
-    #) %>%  
-    spread_values(atbat_des) = jstring("description") %>%
-    #enter_object("items") %>% gather_array %>%           # stack the items
-    #spread_values(                                       # extract item name and price
-    #    item.name = jstring("name"),
-    #    item.price = jnumber("price")
-    #) %>%
-    select(atbat_des) # select only what is needed
-
-
-json_data <- fromJSON(json_file, flatten = TRUE)
-as.list(json_data$pitches)
-list <- json_data[1,]
+    strikeFX(subABIP.RHP.FF, geom = "raster", density1 = list(type = "X"),
+        density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, 
+        labeller = labeller(p_throws = pitch_label))) + 
+        theme(legend.position="none") + 
+        coord_cartesian(xlim=c(-1.5,1.5),ylim=c(1,4)) +
+        theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
+        ggtitle("FF Heat Map - RHP")
+    
+    strikeFX(subABIP.FF.RHP, geom = "hex", density1 = list(type = "X"),
+             density2 = list(quant_score = 1))
+    
+    strikeFX(subABIP.FF.RHP, geom = "raster", density1 = list(type = "X"),
+             density2 = list(quant_score = 1), layer = facet_grid(pitch_type ~ p_throws))
+    
+    strikeFX(subABIP.FF.LHP, geom = "raster", density1 = list(type = "X"),
+             density2 = list(quant_score = 1), layer = facet_grid(pitch_type ~ p_throws))
+    
+    strikeFX(subABIP.FF.LHP, geom = "hex", density1 = list(type = "X"),
+             density2 = list(quant_score = 1))
+    
+    strikeFX(subABIP.RHP, geom = "raster", density1 = list(type = "X"),
+             density2 = list(quant_score = 1), layer = facet_grid(pitch_type ~ p_throws, labeller = labeller(p_throws = pitch_label)))
+    
+    
+}
 
 
 
-json01 <- fromJSON("http://67.205.147.49/atbat/batter/58b7a70a997e47000f72fa16")
-json02 <- stream_in(url("http://67.205.147.49/atbat/batter/58b7a70a997e47000f72fa16"))
-
-json01_flat <- flatten(json01)
-library(tibble)
-json01_tbl <- as_data_frame(json01_flat)
-json01_tbl
-
-json01_tbl %>% mutate(pitches = as.character(pitches)) %>% select(pitches)
-
-library(tidyr)
-
-json01_tbl %>% 
-    unnest(pitches) %>%
-    select(pitcher.lastName, batter.lastName, description)
+subABIP.FF <- subAllBallsInPlay %>% filter(pitch_type=="FF")
 
 

@@ -4,8 +4,8 @@ create_HeatMap_plots <- function(subABIP, mlbID, ...) {
     
     # update labeler function for graphs if needed
     pitch_label <- c(
-        L = "",
-        R = ""
+        L = " ",
+        R = " "
     )
     
     #subABIP <- subAllBallsInPlay
@@ -36,14 +36,15 @@ create_HeatMap_plots <- function(subABIP, mlbID, ...) {
     ## Save plot to working directory in the plots sub-folder
     
     filename = str_c(mlbID,"-rhp-hm-FF.png")
-    ggsave(filename, device="png", path="plots/", width = 7, height = 7)
+    #ggsave(filename, device="png", path="plots/", width = 7, height = 7)
     strikeFX(subABIP.RHP.FF, geom = "raster", density1 = list(type = "X"),
         density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, 
-        labeller = labeller(p_throws = pitFF_label))) + 
+        labeller = labeller(p_throws = pitch_label))) + 
         theme(legend.position="none") + 
         coord_cartesian(xlim=c(-1.5,1.5),ylim=c(1,4)) +
         theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
         ggtitle("FF Heat Map - RHP")
+    ggsave(filename, device="png", path="plots/", width = 7, height = 7)
     
     filename = str_c(mlbID,"-rhp-hm-SL.png")
     ggsave(filename, device="png", path="plots/", width = 7, height = 7)

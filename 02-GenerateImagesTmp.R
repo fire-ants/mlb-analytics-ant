@@ -10,13 +10,13 @@ install.packages("graphics")
 install.packages("akima")
 
 #LOADING in RSTUDIO
-#library(ggplot2)
-#library(pitchRx)
-#library(dplyr)
-#library(stringr)
-#library(graphics)
-#library(RColorBrewer)
-#library(akima)
+library(ggplot2)
+library(pitchRx)
+library(dplyr)
+library(stringr)
+library(graphics)
+library(RColorBrewer)
+library(akima)
 
 
 ## TEMPORARY while loading from SQL database

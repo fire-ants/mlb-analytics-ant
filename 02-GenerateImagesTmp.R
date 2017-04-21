@@ -1,14 +1,14 @@
 ## load libraries
 #INSTALL PRIOR TO RUNNING IN CLOUD
-install.packages("RSQLite", type="binary")
-install.packages("XML2R", type="binary")
-install.packages("pitchRx", type="binary")
-install.packages("dplyr", type="binary")
-install.packages("stringr", type="binary")
-install.packages("ggplot2", type="binary")
-install.packages("RColorBrewer", type="binary")
-install.packages("graphics", type="binary")
-install.packages("akima", type="binary")
+install.packages("RSQLite")
+install.packages("XML2R")
+install.packages("pitchRx")
+install.packages("dplyr")
+install.packages("stringr")
+install.packages("ggplot2")
+install.packages("RColorBrewer")
+install.packages("graphics")
+install.packages("akima")
 
 #LOADING in RSTUDIO
 library(RSQLite)

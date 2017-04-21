@@ -7,7 +7,7 @@ RUN apt-get update \
 		python \
 		python-pip	
 
-COPY /mlb-analytics-engine.R .
+COPY /02-GenerateImagesTmp.R .
 
 RUN pip install awscli
 

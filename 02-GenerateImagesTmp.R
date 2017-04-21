@@ -1,12 +1,31 @@
 ## load libraries
-library(ggplot2)
-library(pitchRx)
-library(dplyr)
-library(stringr)
-library(graphics)
-library(RColorBrewer)
-library(akima)
-#library(wesanderson)
+#INSTALL PRIOR TO RUNNING IN CLOUD
+install.packages("XML2R")
+install.packages("pitchRx")
+install.packages("dplyr")
+install.packages("stringr")
+install.packages("ggplot2")
+install.packages("RColorBrewer")
+install.packages("graphics")
+install.packages("akima")
+
+#LOADING in RSTUDIO
+#library(ggplot2)
+#library(pitchRx)
+#library(dplyr)
+#library(stringr)
+#library(graphics)
+#library(RColorBrewer)
+#library(akima)
+
+
+## TEMPORARY while loading from SQL database
+my_db1 <- src_sqlite("db/pitchRx.sqlite3", create = TRUE)
+
+pitch16 <- select(tbl(my_db1, "pitch"), gameday_link, num, des, type, tfs, tfs_zulu, id, sz_top, sz_bot, px, pz, pitch_type, count, zone)
+atbat16 <- select(tbl(my_db1, "atbat"), gameday_link, num, pitcher, batter, b_height, pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning, inning_side)
+
+
 
 # load Quantitative and Qualitative Scoring Functions Functions
 # Quant scored in terms of Out (-1) and Hit (1)
@@ -511,7 +530,7 @@ create_hv_plots <- function(data, mlbID, ...) {
 
 # doesn't work '467092'
 # works for all other hitters
-hitters <- c('547180','457705','502671','518626','502517','518934','445988','471865','120074','514888')
+#hitters <- c('547180','457705','502671','518626','502517','518934','445988','471865','120074','514888')
 #hitters <- c('502671','518626','502517','518934','445988','471865','120074','514888')
 hitters <- c('120074')
 #mlbID <- '445988'

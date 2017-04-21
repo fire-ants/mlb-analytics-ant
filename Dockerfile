@@ -11,4 +11,4 @@ COPY /mlb-analytics-engine.R .
 
 RUN pip install awscli
 
-CMD ["Rscript", "mlb-analytics-engine.R"]
+CMD ["Rscript", "02-GenerateImagesTmp.R"]

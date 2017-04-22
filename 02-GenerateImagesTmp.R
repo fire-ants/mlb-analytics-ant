@@ -22,7 +22,11 @@ library(akima)
 
 
 ## temporary while loading from SQL database
-my_db1 <- src_sqlite("db/pitchRx.sqlite3", create = TRUE)
+# my_db1 <- src_sqlite("/db/pitchRx.sqlite3", create = TRUE)
+
+my_db1 <- dbConnect(drv=RSQLite::SQLite(), dbname="/db/pitchRx.sqlite3")
+print(dbListTables(my_db1))
+
 system(sprintf("ls -lart"))
 system(sprintf("pwd"))
 

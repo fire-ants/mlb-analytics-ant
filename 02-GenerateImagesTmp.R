@@ -1,26 +1,26 @@
 ## load libraries
 #INSTALL PRIOR TO RUNNING IN CLOUD
+install.packages("DBI")
 install.packages("RSQLite")
-install.packages("DBI",dependencies=TRUE)
-install.packages("XML2R",dependencies=TRUE)
-install.packages("pitchRx",dependencies=TRUE)
-install.packages("dplyr",dependencies=TRUE)
-install.packages("stringr",dependencies=TRUE)
-install.packages("ggplot2",dependencies=TRUE)
-install.packages("RColorBrewer",dependencies=TRUE)
-install.packages("graphics",dependencies=TRUE)
-install.packages("akima",dependencies=TRUE)
+#install.packages("XML2R",dependencies=TRUE)
+install.packages("pitchRx")
+install.packages("stringr")
+install.packages("akima")
+install.packages("dplyr")
+install.packages("ggplot2")
+install.packages("RColorBrewer")
+install.packages("graphics")
 
 #LOADING in RSTUDIO
 #library(DBI)
 library(RSQLite)
 library(ggplot2)
+library(akima)
 library(pitchRx)
-library(dplyr)
 library(stringr)
+library(dplyr)
 library(graphics)
 library(RColorBrewer)
-library(akima)
 
 
 ## temporary while loading from SQL database
@@ -33,8 +33,8 @@ my_db1 <- src_sqlite("pitchRx.sqlite3", create = FALSE)
 #system(sprintf("ls -lart"))
 #system(sprintf("pwd"))
 
-pitch16 <- select(tbl(my_db1, "pitch"), gameday_link, num, des, type, tfs, tfs_zulu, id, sz_top, sz_bot, px, pz, pitch_type, count, zone)
-atbat16 <- select(tbl(my_db1, "atbat"), gameday_link, num, pitcher, batter, b_height, pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning, inning_side)
+pitch16 <- select(dplyr::tbl(my_db1, "pitch"), gameday_link, num, des, type, tfs, tfs_zulu, id, sz_top, sz_bot, px, pz, pitch_type, count, zone)
+atbat16 <- select(dplyr::tbl(my_db1, "atbat""), gameday_link, num, pitcher, batter, b_height, pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning, inning_side)
 
 
 

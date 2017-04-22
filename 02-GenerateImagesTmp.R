@@ -1,18 +1,19 @@
 ## load libraries
 #INSTALL PRIOR TO RUNNING IN CLOUD
-#install.packages("RSQLite")
-install.packages("XML2R")
-install.packages("pitchRx")
-install.packages("dplyr")
-install.packages("stringr")
-install.packages("ggplot2")
-install.packages("RColorBrewer")
-install.packages("graphics")
-install.packages("akima")
+install.packages("RSQLite")
+install.packages("DBI",dependencies=TRUE)
+install.packages("XML2R",dependencies=TRUE)
+install.packages("pitchRx",dependencies=TRUE)
+install.packages("dplyr",dependencies=TRUE)
+install.packages("stringr",dependencies=TRUE)
+install.packages("ggplot2",dependencies=TRUE)
+install.packages("RColorBrewer",dependencies=TRUE)
+install.packages("graphics",dependencies=TRUE)
+install.packages("akima",dependencies=TRUE)
 
 #LOADING in RSTUDIO
 #library(DBI)
-#library(RSQLite)
+library(RSQLite)
 library(ggplot2)
 library(pitchRx)
 library(dplyr)
@@ -23,7 +24,8 @@ library(akima)
 
 
 ## temporary while loading from SQL database
-my_db1 <- src_sqlite("/db/pitchRx.sqlite3", create = FALSE)
+setwd("/db")
+my_db1 <- src_sqlite("pitchRx.sqlite3", create = FALSE)
 
 #my_db1 <- dbConnect(RSQLite::SQLite(), dbname="C:/Users/cohend/Documents/code/mlb-analytics-ant/pitchRx.sqlite3")
 #print(dbListTables(my_db1))

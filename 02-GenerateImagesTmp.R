@@ -11,6 +11,7 @@ install.packages("graphics")
 install.packages("akima")
 
 #LOADING in RSTUDIO
+#library(DBI)
 #library(RSQLite)
 library(ggplot2)
 library(pitchRx)
@@ -24,7 +25,7 @@ library(akima)
 ## temporary while loading from SQL database
 my_db1 <- src_sqlite("/db/pitchRx.sqlite3", create = FALSE)
 
-#my_db1 <- dbConnect(drv=RSQLite::SQLite(), dbname="/db/pitchRx.sqlite3")
+#my_db1 <- dbConnect(RSQLite::SQLite(), dbname="C:/Users/cohend/Documents/code/mlb-analytics-ant/pitchRx.sqlite3")
 #print(dbListTables(my_db1))
 
 #system(sprintf("ls -lart"))

@@ -21,7 +21,7 @@ library(RColorBrewer)
 library(akima)
 
 
-## TEMPORARY while loading from SQL database
+## temporary while loading from SQL database
 my_db1 <- src_sqlite("pitchRx.sqlite3", create = TRUE)
 
 pitch16 <- select(tbl(my_db1, "pitch"), gameday_link, num, des, type, tfs, tfs_zulu, id, sz_top, sz_bot, px, pz, pitch_type, count, zone)

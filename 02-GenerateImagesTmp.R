@@ -22,7 +22,9 @@ library(akima)
 
 
 ## temporary while loading from SQL database
-my_db1 <- src_sqlite("pitchRx.sqlite3", create = TRUE)
+my_db1 <- src_sqlite("db/pitchRx.sqlite3", create = TRUE)
+system(sprintf("ls -lart"))
+system(sprintf("pwd"))
 
 pitch16 <- select(tbl(my_db1, "pitch"), gameday_link, num, des, type, tfs, tfs_zulu, id, sz_top, sz_bot, px, pz, pitch_type, count, zone)
 atbat16 <- select(tbl(my_db1, "atbat"), gameday_link, num, pitcher, batter, b_height, pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning, inning_side)

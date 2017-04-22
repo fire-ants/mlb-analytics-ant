@@ -1,6 +1,6 @@
 ## load libraries
 #INSTALL PRIOR TO RUNNING IN CLOUD
-install.packages("RSQLite")
+#install.packages("RSQLite")
 install.packages("XML2R")
 install.packages("pitchRx")
 install.packages("dplyr")
@@ -11,7 +11,7 @@ install.packages("graphics")
 install.packages("akima")
 
 #LOADING in RSTUDIO
-library(RSQLite)
+#library(RSQLite)
 library(ggplot2)
 library(pitchRx)
 library(dplyr)
@@ -22,13 +22,13 @@ library(akima)
 
 
 ## temporary while loading from SQL database
-# my_db1 <- src_sqlite("/db/pitchRx.sqlite3", create = TRUE)
+my_db1 <- src_sqlite("/db/pitchRx.sqlite3", create = FALSE)
 
-my_db1 <- dbConnect(drv=RSQLite::SQLite(), dbname="/db/pitchRx.sqlite3")
-print(dbListTables(my_db1))
+#my_db1 <- dbConnect(drv=RSQLite::SQLite(), dbname="/db/pitchRx.sqlite3")
+#print(dbListTables(my_db1))
 
-system(sprintf("ls -lart"))
-system(sprintf("pwd"))
+#system(sprintf("ls -lart"))
+#system(sprintf("pwd"))
 
 pitch16 <- select(tbl(my_db1, "pitch"), gameday_link, num, des, type, tfs, tfs_zulu, id, sz_top, sz_bot, px, pz, pitch_type, count, zone)
 atbat16 <- select(tbl(my_db1, "atbat"), gameday_link, num, pitcher, batter, b_height, pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning, inning_side)

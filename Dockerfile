@@ -5,6 +5,8 @@ RUN apt-get update \
 		libxml2-dev \
 		libcurl4-gnutls-dev \
 		python \
+		sqlite3 \
+		libsqlite3-dev \
 		python-pip	
 
 COPY /sql_test.R .

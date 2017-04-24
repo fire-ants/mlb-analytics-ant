@@ -7,8 +7,8 @@ RUN apt-get update \
 		python \
 		python-pip	
 
-COPY /02-GenerateImagesTmp.R .
+COPY /sql_test.R .
 
 RUN pip install awscli
 
-CMD ["Rscript", "02-GenerateImagesTmp.R"]
+CMD ["Rscript", "sql_test.R"]

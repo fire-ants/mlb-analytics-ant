@@ -2,6 +2,7 @@ install.packages("RSQLite")
 install.packages("dplyr")
 
 library(RSQLite)
+library(dplyr)
 
 setwd("/db")
 my_db1 <- src_sqlite("pitchRx.sqlite3", create = FALSE)

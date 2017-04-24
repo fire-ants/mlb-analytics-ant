@@ -39,7 +39,7 @@ atbat16 <- select(tbl(my_db1, "atbat"), gameday_link, num, pitcher, batter, b_he
 
 src_tbls(my_db1)
 tbl(my_db1, "pitch")
-
+head(tbl(my_db1, "pitch"),3)
 
     
 # load Quantitative and Qualitative Scoring Functions Functions

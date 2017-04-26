@@ -1,13 +1,47 @@
 ## load libraries
+#INSTALL PRIOR TO RUNNING IN CLOUD
+install.packages("tidyverse")
+install.packages("DBI")
+install.packages("RSQLite")
+#install.packages("XML2R",dependencies=TRUE)
+install.packages("pitchRx")
+install.packages("stringr")
+install.packages("akima")
+install.packages("dplyr")
+install.packages("ggplot2")
+install.packages("RColorBrewer")
+install.packages("graphics")
+
+#LOADING in RSTUDIO
+#library(DBI)
+library(RSQLite)
 library(ggplot2)
+library(akima)
 library(pitchRx)
-library(dplyr)
 library(stringr)
+library(dplyr)
 library(graphics)
 library(RColorBrewer)
-library(akima)
-#library(wesanderson)
 
+
+## temporary while loading from SQL database
+setwd("/db")
+my_db1 <- src_sqlite("pitchRx.sqlite3", create = FALSE)
+
+#my_db1 <- dbConnect(RSQLite::SQLite(), dbname="C:/Users/cohend/Documents/code/mlb-analytics-ant/pitchRx.sqlite3")
+#print(dbListTables(my_db1))
+
+#system(sprintf("ls -lart"))
+#system(sprintf("pwd"))
+
+pitch16 <- select(tbl(my_db1, "pitch"), gameday_link, num, des, type, tfs, tfs_zulu, id, sz_top, sz_bot, px, pz, pitch_type, count, zone)
+atbat16 <- select(tbl(my_db1, "atbat"), gameday_link, num, pitcher, batter, b_height, pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning, inning_side)
+
+src_tbls(my_db1)
+tbl(my_db1, "pitch")
+head(tbl(my_db1, "pitch"),3)
+
+    
 # load Quantitative and Qualitative Scoring Functions Functions
 # Quant scored in terms of Out (-1) and Hit (1)
 get_quant_score <- function(des) {
@@ -55,8 +89,8 @@ fix_quant_score <- function(event) {
 #data.fin.month <- scrape(start = "2016-09-25", end = "2016-10-24", connect = my_db1$con)
 #data.season 
 
-pitch16 <- select(tbl(my_db1, "pitch"), gameday_link, num, des, type, tfs, tfs_zulu, id, sz_top, sz_bot, px, pz, pitch_type, count, zone)
-atbat16 <- select(tbl(my_db1, "atbat"), gameday_link, num, pitcher, batter, b_height, pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning, inning_side)
+#pitch16 <- select(tbl(my_db1, "pitch"), gameday_link, num, des, type, tfs, tfs_zulu, id, sz_top, sz_bot, px, pz, pitch_type, count, zone)
+#atbat16 <- select(tbl(my_db1, "atbat"), gameday_link, num, pitcher, batter, b_height, pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning, inning_side)
 
 
 
@@ -110,7 +144,8 @@ create_HeatMap_plots <- function(subABIP, mlbID, ...) {
         theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
         ggtitle("FF Heat Map - RHP")
     ggsave(filename, device="png", path="plots/", width = 7, height = 7)
-    system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin/aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
+    # system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin/aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
+	system(sprintf("aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
     } else { print(c('not generating a plot - too few observations ', nrow(subABIP.RHP.FF))) }
     
     filename = str_c(mlbID,"-rhp-hm-SL.png")
@@ -125,7 +160,8 @@ create_HeatMap_plots <- function(subABIP, mlbID, ...) {
         theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
         ggtitle("SL Heat Map - RHP")
     ggsave(filename, device="png", path="plots/", width = 7, height = 7)
-    system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin/aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
+    # system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin/aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
+	system(sprintf("aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
     } else { print(c('not generating a plot - too few observations ', nrow(subABIP.RHP.SL))) }
     
     filename = str_c(mlbID,"-rhp-hm-CU.png")
@@ -140,8 +176,9 @@ create_HeatMap_plots <- function(subABIP, mlbID, ...) {
         theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
         ggtitle("CU Heat Map - RHP")
     ggsave(filename, device="png", path="plots/", width = 7, height = 7)
-    system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin/aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
-    } else { print(c('not generating a plot - too few observations ', nrow(subABIP.RHP.CU))) }
+    # system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin/aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
+    system(sprintf("aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
+	} else { print(c('not generating a plot - too few observations ', nrow(subABIP.RHP.CU))) }
     
     filename = str_c(mlbID,"-rhp-hm-SI.png")
     print(filename)
@@ -155,8 +192,9 @@ create_HeatMap_plots <- function(subABIP, mlbID, ...) {
         theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
         ggtitle("SI Heat Map - RHP")
     ggsave(filename, device="png", path="plots/", width = 7, height = 7)
-    system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin/aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
-    } else { print(c('not generating a plot - too few observations ', nrow(subABIP.RHP.SI))) }
+    # system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin/aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
+    system(sprintf("aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
+	} else { print(c('not generating a plot - too few observations ', nrow(subABIP.RHP.SI))) }
     
     filename = str_c(mlbID,"-rhp-hm-CH.png")
     print(filename)
@@ -170,8 +208,9 @@ create_HeatMap_plots <- function(subABIP, mlbID, ...) {
         theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
         ggtitle("CH Heat Map - RHP")
     ggsave(filename, device="png", path="plots/", width = 7, height = 7)
-    system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin/aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
-    } else { print(c('not generating a plot - too few observations ', nrow(subABIP.RHP.CH))) }
+    # system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin/aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
+    system(sprintf("aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
+	} else { print(c('not generating a plot - too few observations ', nrow(subABIP.RHP.CH))) }
 
 ## now for lefties
     filename = str_c(mlbID,"-lhp-hm-FF.png")
@@ -186,8 +225,9 @@ create_HeatMap_plots <- function(subABIP, mlbID, ...) {
         theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
         ggtitle("FF Heat Map - LHP")
     ggsave(filename, device="png", path="plots/", width = 7, height = 7)
-    system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin/aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
-    } else { print(c('not generating a plot - too few observations ', nrow(subABIP.LHP.FF))) }
+    # system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin/aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
+    system(sprintf("aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
+	} else { print(c('not generating a plot - too few observations ', nrow(subABIP.LHP.FF))) }
     
     filename = str_c(mlbID,"-lhp-hm-SL.png")
     print(filename)
@@ -201,8 +241,9 @@ create_HeatMap_plots <- function(subABIP, mlbID, ...) {
         theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
         ggtitle("SL Heat Map - LHP")
     ggsave(filename, device="png", path="plots/", width = 7, height = 7)
-    system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin/aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
-    } else { print(c('not generating a plot - too few observations ', nrow(subABIP.LHP.SL))) }
+    # system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin/aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
+    system(sprintf("aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
+	} else { print(c('not generating a plot - too few observations ', nrow(subABIP.LHP.SL))) }
 
     filename = str_c(mlbID,"-lhp-hm-CU.png")
     print(filename)
@@ -216,8 +257,9 @@ create_HeatMap_plots <- function(subABIP, mlbID, ...) {
         theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
         ggtitle("CU Heat Map - LHP")
     ggsave(filename, device="png", path="plots/", width = 7, height = 7)
-    system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin/aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
-    } else { print(c('not generating a plot - too few observations ', nrow(subABIP.LHP.CU))) }
+    # system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin/aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
+    system(sprintf("aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
+	} else { print(c('not generating a plot - too few observations ', nrow(subABIP.LHP.CU))) }
     
     filename = str_c(mlbID,"-lhp-hm-SI.png")
     print(filename)
@@ -231,8 +273,9 @@ create_HeatMap_plots <- function(subABIP, mlbID, ...) {
         theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
         ggtitle("SI Heat Map - LHP")
     ggsave(filename, device="png", path="plots/", width = 7, height = 7)
-    system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin/aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
-    } else { print(c('not generating a plot - too few observations ', nrow(subABIP.LHP.SI))) }
+    # system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin/aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
+    system(sprintf("aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
+	} else { print(c('not generating a plot - too few observations ', nrow(subABIP.LHP.SI))) }
     
     filename = str_c(mlbID,"-lhp-hm-CH.png")
     print(filename)
@@ -246,8 +289,9 @@ create_HeatMap_plots <- function(subABIP, mlbID, ...) {
         theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
         ggtitle("CH Heat Map - LHP")
     ggsave(filename, device="png", path="plots/", width = 7, height = 7)
-    system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin/aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
-    } else { print(c('not generating a plot - too few observations ', nrow(subABIP.LHP.CH))) }
+    # system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin/aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
+    system(sprintf("aws s3api put-object --endpoint-url https://ecs2-us-central-1.emc.io/ --bucket fireants-dev --key %1$s --body ./plots/%1$s", filename))
+	} else { print(c('not generating a plot - too few observations ', nrow(subABIP.LHP.CH))) }
 }
 
 #####################################################################
@@ -511,7 +555,7 @@ create_hv_plots <- function(data, mlbID, ...) {
 
 # doesn't work '467092'
 # works for all other hitters
-hitters <- c('547180','457705','502671','518626','502517','518934','445988','471865','120074','514888')
+#hitters <- c('547180','457705','502671','518626','502517','518934','445988','471865','120074','514888')
 #hitters <- c('502671','518626','502517','518934','445988','471865','120074','514888')
 hitters <- c('120074')
 #mlbID <- '445988'
@@ -551,5 +595,5 @@ for (mlbID in hitters) {
   
     # generate plots
     create_hv_plots(joined,mlbID)
-    #create_HeatMap_plots(subAllBallsInPlay, mlbID)
+    create_HeatMap_plots(subAllBallsInPlay, mlbID)
 }

@@ -5,10 +5,12 @@ RUN apt-get update \
 		libxml2-dev \
 		libcurl4-gnutls-dev \
 		python \
+		sqlite3 \
+		libsqlite3-dev \
 		python-pip	
 
-COPY /mlb-analytics-engine.R .
+COPY /sql_test.R .
 
 RUN pip install awscli
 
-CMD ["Rscript", "mlb-analytics-engine.R"]
+CMD ["Rscript", "sql_test.R"]

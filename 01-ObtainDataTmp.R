@@ -11,13 +11,17 @@ library(RColorBrewer)
 ## Use dplyer to create SQLite database
 #library(dplyr)
 my_db1 <- src_sqlite("pitchRx.sqlite3", create = TRUE)
+my_db2017 <- src_sqlite("pitchRx2017.sqlite3", create = TRUE)
 
 #confirm empty
 my_db1
+my_db2017
+
 
 ## scrape 2016 game data and store in the database
 #library(pitchRx)
-scrape(start = "2016-04-03", end = "2016-11-02", suffix = "inning/inning_all.xml", connect = my_db1$con)
+#scrape(start = "2016-04-03", end = "2016-11-02", suffix = "inning/inning_all.xml", connect = my_db1$con)
+scrape(start = "2017-04-02", end = "2017-04-26", suffix = "inning/inning_all.xml", connect = my_db2017$con)
 
 
 # To speed up execution time, create an index on these three fields.
@@ -27,6 +31,11 @@ dbSendQuery(my_db1$con, "CREATE INDEX url_atbat ON atbat(url)")
 dbSendQuery(my_db1$con, "CREATE INDEX url_pitch ON pitch(url)")
 dbSendQuery(my_db1$con, "CREATE INDEX pitcher_index ON atbat(pitcher_name)")
 dbSendQuery(my_db1$con, "CREATE INDEX des_index ON pitch(des)")
+
+dbSendQuery(my_db2017$con, "CREATE INDEX url_atbat ON atbat(url)") 
+dbSendQuery(my_db2017$con, "CREATE INDEX url_pitch ON pitch(url)")
+dbSendQuery(my_db2017$con, "CREATE INDEX pitcher_index ON atbat(pitcher_name)")
+dbSendQuery(my_db2017$con, "CREATE INDEX des_index ON pitch(des)")
 
 ## load libraries
 library(pitchRx)    ## thank you Carson Sievert!!!

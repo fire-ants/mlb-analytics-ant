@@ -301,7 +301,7 @@ create_hv_plots <- function(data, mlbID, ...) {
   
   ## FF Four-seam fastball - RHP
   hv.FF <- data.frame(x = sub.FF.RHP$px, y = sub.FF.RHP$pz, z = sub.FF.RHP$hitter_val)
-  hv.FF.grid <- interp(hv.FF$x, hv.FF$y, hv.FF$z)
+  hv.FF.grid <- interp(hv.FF$x, hv.FF$y, hv.FF$z, duplicate = "mean")
   hv.FF.grid2 <- expand.grid(x=hv.FF.grid$x, y=hv.FF.grid$y)
   hv.FF.grid2$z <- as.vector(hv.FF.grid$z)
   
@@ -324,7 +324,7 @@ create_hv_plots <- function(data, mlbID, ...) {
   
   ## FF Four-seam fastball - LHP
   hv.FF <- data.frame(x = sub.FF.LHP$px, y = sub.FF.LHP$pz, z = sub.FF.LHP$hitter_val)
-  hv.FF.grid <- interp(hv.FF$x, hv.FF$y, hv.FF$z)
+  hv.FF.grid <- interp(hv.FF$x, hv.FF$y, hv.FF$z, duplicate = "mean")
   hv.FF.grid2 <- expand.grid(x=hv.FF.grid$x, y=hv.FF.grid$y)
   hv.FF.grid2$z <- as.vector(hv.FF.grid$z)
   
@@ -346,7 +346,7 @@ create_hv_plots <- function(data, mlbID, ...) {
   
   ## SL Slider - RHP
   hv.SL <- data.frame(x = sub.SL.RHP$px, y = sub.SL.RHP$pz, z = sub.SL.RHP$hitter_val)
-  hv.SL.grid <- interp(hv.SL$x, hv.SL$y, hv.SL$z)
+  hv.SL.grid <- interp(hv.SL$x, hv.SL$y, hv.SL$z, duplicate = "mean")
   hv.SL.grid2 <- expand.grid(x=hv.SL.grid$x, y=hv.SL.grid$y)
   hv.SL.grid2$z <- as.vector(hv.SL.grid$z)
   
@@ -368,7 +368,7 @@ create_hv_plots <- function(data, mlbID, ...) {
   
   ## SL Slider - LHP
   hv.SL <- data.frame(x = sub.SL.LHP$px, y = sub.SL.LHP$pz, z = sub.SL.LHP$hitter_val)
-  hv.SL.grid <- interp(hv.SL$x, hv.SL$y, hv.SL$z)
+  hv.SL.grid <- interp(hv.SL$x, hv.SL$y, hv.SL$z, duplicate = "mean")
   hv.SL.grid2 <- expand.grid(x=hv.SL.grid$x, y=hv.SL.grid$y)
   hv.SL.grid2$z <- as.vector(hv.SL.grid$z)
   
@@ -390,7 +390,7 @@ create_hv_plots <- function(data, mlbID, ...) {
   
   ## CH Four-seam fastball - RHP
   hv.CH <- data.frame(x = sub.CH.RHP$px, y = sub.CH.RHP$pz, z = sub.CH.RHP$hitter_val)
-  hv.CH.grid <- interp(hv.CH$x, hv.CH$y, hv.CH$z)
+  hv.CH.grid <- interp(hv.CH$x, hv.CH$y, hv.CH$z, duplicate = "mean")
   hv.CH.grid2 <- expand.grid(x=hv.CH.grid$x, y=hv.CH.grid$y)
   hv.CH.grid2$z <- as.vector(hv.CH.grid$z)
   
@@ -412,7 +412,7 @@ create_hv_plots <- function(data, mlbID, ...) {
   
   ## CH Four-seam fastball - LHP
   hv.CH <- data.frame(x = sub.CH.LHP$px, y = sub.CH.LHP$pz, z = sub.CH.LHP$hitter_val)
-  hv.CH.grid <- interp(hv.CH$x, hv.CH$y, hv.CH$z)
+  hv.CH.grid <- interp(hv.CH$x, hv.CH$y, hv.CH$z, duplicate = "mean")
   hv.CH.grid2 <- expand.grid(x=hv.CH.grid$x, y=hv.CH.grid$y)
   hv.CH.grid2$z <- as.vector(hv.CH.grid$z)
   
@@ -434,7 +434,7 @@ create_hv_plots <- function(data, mlbID, ...) {
   
   ## CU Four-seam fastball - RHP
   hv.CU <- data.frame(x = sub.CU.RHP$px, y = sub.CU.RHP$pz, z = sub.CU.RHP$hitter_val)
-  hv.CU.grid <- interp(hv.CU$x, hv.CU$y, hv.CU$z)
+  hv.CU.grid <- interp(hv.CU$x, hv.CU$y, hv.CU$z, duplicate = "mean")
   hv.CU.grid2 <- expand.grid(x=hv.CU.grid$x, y=hv.CU.grid$y)
   hv.CU.grid2$z <- as.vector(hv.CU.grid$z)
   
@@ -456,7 +456,7 @@ create_hv_plots <- function(data, mlbID, ...) {
   
   ## CU Four-seam fastball - LHP
   hv.CU <- data.frame(x = sub.CU.LHP$px, y = sub.CU.LHP$pz, z = sub.CU.LHP$hitter_val)
-  hv.CU.grid <- interp(hv.CU$x, hv.CU$y, hv.CU$z)
+  hv.CU.grid <- interp(hv.CU$x, hv.CU$y, hv.CU$z, duplicate = "mean")
   hv.CU.grid2 <- expand.grid(x=hv.CU.grid$x, y=hv.CU.grid$y)
   hv.CU.grid2$z <- as.vector(hv.CU.grid$z)
   
@@ -478,7 +478,7 @@ create_hv_plots <- function(data, mlbID, ...) {
   
   ## SI Four-seam fastball - RHP
   hv.SI <- data.frame(x = sub.SI.RHP$px, y = sub.SI.RHP$pz, z = sub.SI.RHP$hitter_val)
-  hv.SI.grid <- interp(hv.SI$x, hv.SI$y, hv.SI$z)
+  hv.SI.grid <- interp(hv.SI$x, hv.SI$y, hv.SI$z, duplicate = "mean")
   hv.SI.grid2 <- expand.grid(x=hv.SI.grid$x, y=hv.SI.grid$y)
   hv.SI.grid2$z <- as.vector(hv.SI.grid$z)
   
@@ -500,7 +500,7 @@ create_hv_plots <- function(data, mlbID, ...) {
   
   ## SI Four-seam fastball - LHP
   hv.SI <- data.frame(x = sub.SI.LHP$px, y = sub.SI.LHP$pz, z = sub.SI.LHP$hitter_val)
-  hv.SI.grid <- interp(hv.SI$x, hv.SI$y, hv.SI$z)
+  hv.SI.grid <- interp(hv.SI$x, hv.SI$y, hv.SI$z, duplicate = "mean")
   hv.SI.grid2 <- expand.grid(x=hv.SI.grid$x, y=hv.SI.grid$y)
   hv.SI.grid2$z <- as.vector(hv.SI.grid$z)
   
@@ -527,8 +527,11 @@ create_hv_plots <- function(data, mlbID, ...) {
 hitters <- c('547180','457705','502671','518626','502517','518934','445988','471865','120074','514888')
 #hitters <- c('502671','518626','502517','518934','445988','471865','120074','514888')
 hitters <- c('460075')
-mlbID <- '460075'
-#mlbID <- '519346'
+mlbID <- '460075'  ## Braun
+mlbID <- '545361'  ## Trout
+mlbID <- '519346'  ## Thames
+
+
 
 for (mlbID in hitters) {
     print(mlbID)
@@ -583,6 +586,6 @@ for (mlbID in hitters) {
     subAllBallsInPlay17 <- subset(joined17, type == "X")
   
     # generate plots
-    create_hv_plots(joined16,mlbID)
-    create_HeatMap_plots(subAllBallsInPlay17, mlbID)
-}
+    create_hv_plots(joined17,mlbID)
+    create_HeatMap_plots(subAllBallsInPlay16, mlbID)
+    }

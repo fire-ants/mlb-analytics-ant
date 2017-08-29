@@ -1,14 +1,18 @@
-545361  Trout
-547180  Harper
+514888  Jose Altuve
+453568  Charlie Blackmon
+457759  Justin Turner
+519317  Giancarlo Stanton
+458015  Joey Votto
+547180  Bryce Harper
+641355  Cody Bellinger
+592450  Aaron Judge
+545361  Mike Trout
 457705  McCutchen
 502671  Goldschmidt
 518626  Donaldson
 502517  Murphy
-518934  LaHahieu
-467092  Ramos
-445988  Prado
+518934  LaMahieu
 471865  Gonzalez
-120074  Ortiz
-514888  Altuve
+592178  Bryant
 519346  Thames
 460075  Braun

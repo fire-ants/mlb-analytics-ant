@@ -1,229 +1,87 @@
-## Connect to JSON
+## load libraries
+library(ggplot2)
+library(graphics)
+library(RColorBrewer)
+library(pitchRx)    ## thank you Carson Sievert!!!
+library(dplyr)      ## thank you Hadley Wickham
+library(stringr)
 
-library(tidyjson)   # this library
-library(dplyr)      # for %>% and other dplyr functions
-library(httr)
-json_raw <- GET("http://67.205.147.49/atbat/batter/58b7a70a997e47000f72fa16")
-jsontxt <- content(json_raw, "text")
+## Use dplyer to create SQLite database
+#library(dplyr)
+my_db2016 <- src_sqlite("pitchRx2016.sqlite3", create = TRUE)
+my_db2017 <- src_sqlite("pitchRx2017.sqlite3", create = TRUE)
 
-json_raw <-fromJSON("http://67.205.147.49/atbat/batter/58b7a70a997e47000f72fa16")
-
-jsontxt %>%                  # %>% is the magrittr pipeline operator 
-    gather_array %>%          # gather (stack) the array by index
-    enter_object("pitcher") %>% gather_array %>% 
-    enter_object("batter") %>% gather_array %>% 
-    spread_values(atbat_des = jstring("description")) %>% 
-    enter_object("pitches") %>% gather_array %>% 
-    spread_values(            # spread (widen) values to widen the data.frame
-        pitchType = jstring("pitchType"), # value of "name" becomes a character column
-        endSpeed = jnumber("endSpeed")    # value of "age" becomes a numeric column
-    )
-
-purch_items <- purch_json %>%
-    gather_array %>%                                     # stack the users 
-    spread_values(person = jstring("name")) %>%          # extract the user name
-    enter_object("purchases") %>% gather_array %>%       # stack the purchases
-    spread_values(purchase.date = jstring("date")) %>%   # extract the purchase date
-    enter_object("items") %>% gather_array %>%           # stack the items
-    spread_values(                                       # extract item name and price
-        item.name = jstring("name"),
-        item.price = jnumber("price")
-    ) %>%
-    select(person, purchase.date, item.name, item.price) # select only what is needed
+#confirm empty
+my_db2016
+my_db2017
 
 
-
-library(RJSONIO)
-# from the website
-json_raw <-fromJSON("http://67.205.147.49/atbat/batter/58b7a70a997e47000f72fa16")
-
-library(plyr)
-ldply(fromJSON(json_raw), stack)
-
-json06 <-json_raw[['pitches']]
-
-fmNames<-sapply(json_raw, function(x) x[[6]])
-head(fmNames)
-
-library(gdata) # for the trim function
-grabInfo<-function(var){
-    print(paste("Variable", var, sep=" "))  
-    sapply(json_raw, function(x) returnData(x, var)) 
-}
-
-returnData<-function(x, var){
-    if(!is.null( x[[var]])){
-        return( trim(x[[var]]))
-    }else{
-        return(NA)
-    }
-}
-
-# do the extraction and assembly
-fmDataDF<-data.frame(sapply(1:22, grabInfo), stringsAsFactors=FALSE)
+## scrape 2016 game data and store in the database
+#library(pitchRx)
+#scrape(start = "2016-04-03", end = "2016-11-02", suffix = "inning/inning_all.xml", connect = my_db1$con)
+scrape(start = "2016-04-01", end = "2016-10-31", suffix = "inning/inning_all.xml", connect = my_db2016$con)
+scrape(start = "2017-06-01", end = "2017-07-31", suffix = "inning/inning_all.xml", connect = my_db2017$con)
 
 
-foodMarketsRaw<-fromJSON("retail_food_markets.json")
+# To speed up execution time, create an index on these three fields.
+library("dbConnect", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Resources/library")
 
+dbSendQuery(my_db2016$con, "CREATE INDEX url_atbat ON atbat(url)") 
+dbSendQuery(my_db2016$con, "CREATE INDEX url_pitch ON pitch(url)")
+dbSendQuery(my_db2016$con, "CREATE INDEX pitcher_index ON atbat(pitcher_name)")
+dbSendQuery(my_db2016$con, "CREATE INDEX des_index ON pitch(des)")
 
-install.packages("rjson")
-library("rjson")
-library("jsonlite")install.packages("tidyjson")
-library("tidyjson", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Resources/library")
+dbSendQuery(my_db2017$con, "CREATE INDEX url_atbat ON atbat(url)") 
+dbSendQuery(my_db2017$con, "CREATE INDEX url_pitch ON pitch(url)")
+dbSendQuery(my_db2017$con, "CREATE INDEX pitcher_index ON atbat(pitcher_name)")
+dbSendQuery(my_db2017$con, "CREATE INDEX des_index ON pitch(des)")
 
+# load Quantitative and Qualitative Scoring Functions Functions
+# Quant scored in terms of Out (-1) and Hit (1)
+#get_quant_score <- function(des) {
+#    score <- (
+#        as.integer(str_detect(des, "Called Strike")) * -(1/3) +
+#            as.integer(str_detect(des, "Foul")) * -(1/3) +
+#            as.integer(str_detect(des, "In play, run")) * 1.0 +
+#            as.integer(str_detect(des, "In play, out")) * -1.0 +
+#            as.integer(str_detect(des, "In play, no out")) * 1.0 +
+#            as.integer(str_detect(des, "^Ball$")) * 0.25 +
+#            as.integer(str_detect(des, "Swinging Strike")) * -(1/2.5) +
+#            as.integer(str_detect(des, "Hit By Pitch")) * 1.0 +
+#            as.integer(str_detect(des, "Ball In Dirt")) * 0.25 +
+#            as.integer(str_detect(des, "Missed Bunt")) * -(1/3) +
+#            as.integer(str_detect(des, "Intent Ball")) * 0.25
+#    )
+#    return(score)
+#}
+#get_qual_score <- function(des) {
+#    score <- (
+#        as.integer(str_detect(des, "homer")) * 2 +
+#            as.integer(str_detect(des, "line")) * 1.5 +
+#            as.integer(str_detect(des, "sharp")) * 1.5 +
+#            as.integer(str_detect(des, "grounds")) * -1 +
+#            as.integer(str_detect(des, "flies")) * -1 +
+#            as.integer(str_detect(des, "soft")) * -2 +
+#            as.integer(str_detect(des, "pop")) * -2 +
+#            as.integer(str_detect(des, "triples")) * 1.5 +
+#            as.integer(str_detect(des, "doubles")) * 1.0 +
+#            as.integer(str_detect(des, "error")) * 0.5
+#    )
+#    return(score)
+#}
 
-library(tidyjson)   # this library
-library(dplyr)      # for %>% and other dplyr functions
+#fix_quant_score <- function(event) {
+#    score <- (
+#        as.integer(str_detect(event, "Groundout")) * -2 +
+#            as.integer(str_detect(event, "Forceout")) * -2 +
+#            as.integer(str_detect(event, "Field Error")) * -2 
+#    )
+#    return(score)
+#}
 
-json_url <- "http://67.205.147.49/atbat/batter/58b7a70a997e47000f72fa16"
-json_data <- fromJSON(json_file)
-transform(stack(json_data), pitches=c(json_data, names))
+# Load data from final month of World Series
+#data.fin.month <- scrape(start = "2016-09-25", end = "2016-10-24", connect = my_db1$con)
+#data.season 
 
-json_data
-
-json03 <- fromJSON(json_url, flatten = TRUE)
-json04 <- toJSON(json_url, auto_unbox = TRUE)
-json05 <- fromJSON(json04)
-
-
-
-
-json_df <- data.frame(number = unlist(json_data))
-json_df$rownames <- rownames(json_df) 
-rownames(json_df) <- NULL
-json_df$categories <- lapply(strsplit(as.character(json_df$rownames), "\\."), "[", 1)
-json_df$pitches <- lapply(strsplit(as.character(json_df$rownames), "\\."), "[",2) 
-json_df$rownames <- NULL
-
-
-
-
-json.matchData <- fromJSON(json_url, flatten = TRUE)
-
-
-matchData.i <- lapply(json04$pitches, function(x){ unlist(x)})
-
-library(plyr)
-matchData <- rbind.fill(lapply(matchData.i, 
-    function(x) do.call("data.frame", as.list(x))
-))
-
-library(plyr)
-ldply(fromJSON(json), stack)
-
-
-
-raw_df <- jsonlite::fromJSON(json_file, simplifyDataFrame = TRUE)
-raw_df
-str(raw_df)
-
-
-hAtBats <- raw_df %>%
-    gather_array %>%                                     # stack the users 
-    spread_values(batter = jstring("batter")) %>%             # extract the user name
-    enter_object("pitches") %>% gather_array %>%       # stack the purchases
-    spread_values(type = jstring("type")) %>%   # extract the purchase date
-    ) %>%
-    select(batter, type) # select only what is needed
-
-
-purch_json <- '
-[
-    {
-    "name": "bob", 
-    "purchases": [
-    {
-    "date": "2014/09/13",
-    "items": [
-    {"name": "shoes", "price": 187},
-    {"name": "belt", "price": 35}
-    ]
-    }
-    ]
-    },
-    {
-    "name": "susan", 
-    "purchases": [
-    {
-    "date": "2014/10/01",
-    "items": [
-    {"name": "dress", "price": 58},
-    {"name": "bag", "price": 118}
-    ]
-    },
-    {
-    "date": "2015/01/03",
-    "items": [
-    {"name": "shoes", "price": 115}
-    ]
-    }
-    ]
-    }
-    ]'
-
-    
-    
-purch_df <- jsonlite::fromJSON(purch_json, simplifyDataFrame = TRUE)
-raw_df <- jsonlite::fromJSON(json_url, simplifyDataFrame = TRUE)
-hv_df <- jsonlite::fromJSON("http://67.205.147.49/atbat/batter/58b7a70a997e47000f72fa16", simplifyDataFrame = TRUE)
-purch_df 
-str(purch_df)
-
-hv_items <- json_data %>%  
-    gather_array %>%
-    spread_values(description = jstring("at_bat_des")) %>% 
-    select(description)
-
-library("rjson")
-json_file <- "http://api.worldbank.org/country?per_page=10&region=OED&lendingtype=LNX&format=json"
-json_data3 <- fromJSON(paste(readLines(json_file), collapse=""))
-
-
-
-purch_items <- purch_json %>%
-    gather_array %>%                                     # stack the users 
-    spread_values(person = jstring("name")) %>%          # extract the user name
-    enter_object("purchases") %>% gather_array %>%       # stack the purchases
-    spread_values(purchase.date = jstring("date")) %>%   # extract the purchase date
-    enter_object("items") %>% gather_array %>%           # stack the items
-    spread_values(                                       # extract item name and price
-        item.name = jstring("name"),
-        item.price = jnumber("price")
-    ) %>%
-    select(person, purchase.date, item.name, item.price) # select only what is needed
-
-
-
-
-toJSON(json_data, pretty=TRUE)
-mymatrix <- fromJSON(json_file)
-mymatrix
-
-json <- '[
-  [1, 2, 3, 4],
-[5, 6, 7, 8],
-[9, 10, 11, 12]
-]'
-mymatrix <- fromJSON(json)
-mymatrix
-
-
-m <- foreach(i=1:nrow(json_data)) %do%{lapply(
-    json_data[[1]]$pitches, 
-    function(x) c(x$des['des'], x$type['type'], x$tfs['tfs'])
-)
-}
-    
-des, type, tfs,
-
-m <- do.call(rbind, m)
-
-
-http://67.205.147.49/player/mlbid/545361
-58b7a70a997e47000f72fa16
-HitterAB <- jsonlite::
-http://67.205.147.49/atbat/batter/58b7a70a997e47000f72fa16
-
-## load data frames
-## Benita Here
-
+#pitch16 <- select(tbl(my_db1, "pitch"), gameday_link, num, des, type, tfs, tfs_zulu, id, sz_top, sz_bot, px, pz, pitch_type, count, zone)
+#atbat16 <- select(tbl(my_db1, "atbat"), gameday_link, num, pitcher, batter, b_height, pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning, inning_side)

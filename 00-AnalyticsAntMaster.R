@@ -26,6 +26,7 @@ library(graphics)
 library(RColorBrewer)
 library(XML2R)
 library(devtools)
+library(dbConnect)
 
 ## temporary while loading from SQL database
 ## if running via container
@@ -33,10 +34,10 @@ library(devtools)
 #my_db1 <- src_sqlite("pitchRx.sqlite3", create = FALSE)
 
 ## Jason's macbook
-setwd("/Users/jrbattles/GitHub/mlb-analytics-ant")
-my_db1 <- src_sqlite("pitchRx.sqlite3", create = FALSE)
-my_db2016 <- src_sqlite("pitchRx2016.sqlite3", create = FALSE)
-my_db2017 <- src_sqlite("pitchRx2017.sqlite3", create = FALSE)
+#setwd("/Users/jrbattles/GitHub/mlb-analytics-ant")
+#my_db1 <- src_sqlite("pitchRx.sqlite3", create = FALSE)
+#my_db2016 <- src_sqlite("pitchRx2016.sqlite3", create = FALSE)
+#my_db2017 <- src_sqlite("pitchRx2017.sqlite3", create = FALSE)
 
 #my_db1 <- dbConnect(RSQLite::SQLite(), dbname="C:/Users/cohend/Documents/code/mlb-analytics-ant/pitchRx.sqlite3")
 #print(dbListTables(my_db1))
@@ -44,12 +45,6 @@ my_db2017 <- src_sqlite("pitchRx2017.sqlite3", create = FALSE)
 #system(sprintf("ls -lart"))
 #system(sprintf("pwd"))
 
-pitch16 <- select(tbl(my_db1, "pitch"), gameday_link, num, des, type, tfs, tfs_zulu, id, sz_top, sz_bot, px, pz, pitch_type, count, zone)
-atbat16 <- select(tbl(my_db1, "atbat"), gameday_link, num, pitcher, batter, b_height, pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning, inning_side)
-
-src_tbls(my_db1)
-tbl(my_db1, "pitch")
-head(tbl(my_db1, "pitch"),3)
 
     
 # load Quantitative and Qualitative Scoring Functions Functions
@@ -95,6 +90,8 @@ fix_quant_score <- function(event) {
     return(score)
 }
 
+
+
 # Load data from final month of World Series
 #data.fin.month <- scrape(start = "2016-09-25", end = "2016-10-24", connect = my_db1$con)
 #data.season 
@@ -104,205 +101,6 @@ fix_quant_score <- function(event) {
 
 
 
-### Creates Traditional Heat Maps. Receive subAllBallsInPlay as subAPIB.   Also mlbID.
-create_HeatMap_plots <- function(subABIP, mlbID, ...) {
-    #Testing
-    #subABIP <- subAllBallsInPlay
-    
-    # update labeler function for graphs if needed
-    pitch_label <- c(
-        L = "",
-        R = ""
-    )
-
-    
-    # subset All Balls in Play by LHP, RHP
-    subABIP.RHP <- subABIP %>% filter(p_throws=="R")
-    subABIP.LHP <- subABIP %>% filter(p_throws=="L")
-    
-    # subset All Balls in Play by pitch type.
-    subABIP.RHP.FF <- subABIP.RHP %>% filter(pitch_type=="FF")
-    subABIP.RHP.SL <- subABIP.RHP %>% filter(pitch_type=="SL")
-    subABIP.RHP.CU <- subABIP.RHP %>% filter(pitch_type=="CU")
-    subABIP.RHP.SI <- subABIP.RHP %>% filter(pitch_type=="SI")
-    subABIP.RHP.CH <- subABIP.RHP %>% filter(pitch_type=="CH")
-#    subABIP.RHP.KN <- subABIP.RHP %>% filter(pitch_type=="KN")
-    
-    subABIP.LHP.FF <- subABIP.LHP %>% filter(pitch_type=="FF")
-    subABIP.LHP.SL <- subABIP.LHP %>% filter(pitch_type=="SL")
-    subABIP.LHP.CU <- subABIP.LHP %>% filter(pitch_type=="CU")
-    subABIP.LHP.SI <- subABIP.LHP %>% filter(pitch_type=="SI")
-    subABIP.LHP.CH <- subABIP.LHP %>% filter(pitch_type=="CH")
-#   subABIP.LHP.KN <- subABIP.LHP %>% filter(pitch_type=="KN")    
-    
-    #strikeFX(subAllBallsInPlay, geom = "raster", density1 = list(type = "X"),
-    #         density2 = list(quant_score = 1), 
-    #         layer = facet_grid(. ~ p_throws, labeller = labeller(p_throws = pitch_label)))
-    
-    # generate Heat Map per p_throws and per p_type
-    ## Save plot to working directory in the plots sub-folder
-    
-    filename = str_c(mlbID,"-rhp-hm-FF.png")
-    print(filename)
-    print(nrow(subABIP.RHP.FF))
-    if (nrow(subABIP.RHP.FF) > 8 ) {
-        strikeFX(subABIP.RHP.FF, geom = "raster", density1 = list(type = "X"),
-        density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, 
-        labeller = labeller(p_throws = pitch_label))) + 
-        theme(legend.position="none") + 
-        coord_cartesian(xlim=c(-1.5,1.5),ylim=c(1,4)) +
-        theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
-        ggtitle("FF Heat Map - RHP")
-    ggsave(filename, device="png", path="plots/", width = 7, height = 7)
-    # system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin//Users/jrbattles/Library/Python/2.7/bin/aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
-	system(sprintf("/Users/jrbattles/Library/Python/2.7/bin/aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
-    } else { print(c('not generating a plot - too few observations ', nrow(subABIP.RHP.FF))) }
-    
-    filename = str_c(mlbID,"-rhp-hm-SL.png")
-    print(filename)
-    print(nrow(subABIP.RHP.SL))
-    if (nrow(subABIP.RHP.SL) > 8 ) {
-        strikeFX(subABIP.RHP.SL, geom = "raster", density1 = list(type = "X"),
-        density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, 
-        labeller = labeller(p_throws = pitch_label))) + 
-        theme(legend.position="none") + 
-        coord_cartesian(xlim=c(-1.5,1.5),ylim=c(1,4)) +
-        theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
-        ggtitle("SL Heat Map - RHP")
-    ggsave(filename, device="png", path="plots/", width = 7, height = 7)
-    # system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin//Users/jrbattles/Library/Python/2.7/bin/aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
-	system(sprintf("/Users/jrbattles/Library/Python/2.7/bin/aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
-    } else { print(c('not generating a plot - too few observations ', nrow(subABIP.RHP.SL))) }
-    
-    filename = str_c(mlbID,"-rhp-hm-CU.png")
-    print(filename)
-    print(nrow(subABIP.RHP.CU))
-    if (nrow(subABIP.RHP.CU) > 8 ) {
-        strikeFX(subABIP.RHP.CU, geom = "raster", density1 = list(type = "X"),
-        density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, 
-        labeller = labeller(p_throws = pitch_label))) + 
-        theme(legend.position="none") + 
-        coord_cartesian(xlim=c(-1.5,1.5),ylim=c(1,4)) +
-        theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
-        ggtitle("CU Heat Map - RHP")
-    ggsave(filename, device="png", path="plots/", width = 7, height = 7)
-    # system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin//Users/jrbattles/Library/Python/2.7/bin/aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
-    system(sprintf("/Users/jrbattles/Library/Python/2.7/bin/aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
-	} else { print(c('not generating a plot - too few observations ', nrow(subABIP.RHP.CU))) }
-    
-    filename = str_c(mlbID,"-rhp-hm-SI.png")
-    print(filename)
-    print(nrow(subABIP.RHP.SI))
-    if (nrow(subABIP.RHP.SI) > 8 ) {
-        strikeFX(subABIP.RHP.SI, geom = "raster", density1 = list(type = "X"),
-        density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, 
-        labeller = labeller(p_throws = pitch_label))) + 
-        theme(legend.position="none") + 
-        coord_cartesian(xlim=c(-1.5,1.5),ylim=c(1,4)) +
-        theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
-        ggtitle("SI Heat Map - RHP")
-    ggsave(filename, device="png", path="plots/", width = 7, height = 7)
-    # system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin//Users/jrbattles/Library/Python/2.7/bin/aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
-    system(sprintf("/Users/jrbattles/Library/Python/2.7/bin/aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
-	} else { print(c('not generating a plot - too few observations ', nrow(subABIP.RHP.SI))) }
-    
-    filename = str_c(mlbID,"-rhp-hm-CH.png")
-    print(filename)
-    print(nrow(subABIP.RHP.CH))
-    if (nrow(subABIP.RHP.CH) > 8 ) {
-        strikeFX(subABIP.RHP.CH, geom = "raster", density1 = list(type = "X"),
-        density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, 
-        labeller = labeller(p_throws = pitch_label))) + 
-        theme(legend.position="none") + 
-        coord_cartesian(xlim=c(-1.5,1.5),ylim=c(1,4)) +
-        theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
-        ggtitle("CH Heat Map - RHP")
-    ggsave(filename, device="png", path="plots/", width = 7, height = 7)
-    # system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin//Users/jrbattles/Library/Python/2.7/bin/aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
-    system(sprintf("/Users/jrbattles/Library/Python/2.7/bin/aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
-	} else { print(c('not generating a plot - too few observations ', nrow(subABIP.RHP.CH))) }
-
-## now for lefties
-    filename = str_c(mlbID,"-lhp-hm-FF.png")
-    print(filename)
-    print(nrow(subABIP.LHP.FF))
-    if (nrow(subABIP.LHP.FF) > 8) {
-    strikeFX(subABIP.LHP.FF, geom = "raster", density1 = list(type = "X"),
-        density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, 
-        labeller = labeller(p_throws = pitch_label))) + 
-        theme(legend.position="none") + 
-        coord_cartesian(xlim=c(-1.5,1.5),ylim=c(1,4)) +
-        theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
-        ggtitle("FF Heat Map - LHP")
-    ggsave(filename, device="png", path="plots/", width = 7, height = 7)
-    # system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin//Users/jrbattles/Library/Python/2.7/bin/aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
-    system(sprintf("/Users/jrbattles/Library/Python/2.7/bin/aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
-	} else { print(c('not generating a plot - too few observations ', nrow(subABIP.LHP.FF))) }
-    
-    filename = str_c(mlbID,"-lhp-hm-SL.png")
-    print(filename)
-    print(nrow(subABIP.LHP.SL))
-    if (nrow(subABIP.LHP.SL) > 8) {
-    strikeFX(subABIP.LHP.SL, geom = "raster", density1 = list(type = "X"),
-        density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, 
-        labeller = labeller(p_throws = pitch_label))) + 
-        theme(legend.position="none") + 
-        coord_cartesian(xlim=c(-1.5,1.5),ylim=c(1,4)) +
-        theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
-        ggtitle("SL Heat Map - LHP")
-    ggsave(filename, device="png", path="plots/", width = 7, height = 7)
-    # system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin//Users/jrbattles/Library/Python/2.7/bin/aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
-    system(sprintf("/Users/jrbattles/Library/Python/2.7/bin/aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
-	} else { print(c('not generating a plot - too few observations ', nrow(subABIP.LHP.SL))) }
-
-    filename = str_c(mlbID,"-lhp-hm-CU.png")
-    print(filename)
-    print(nrow(subABIP.LHP.CU))
-    if (nrow(subABIP.LHP.CU) > 8) {
-    strikeFX(subABIP.LHP.CU, geom = "raster", density1 = list(type = "X"),
-        density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, 
-        labeller = labeller(p_throws = pitch_label))) + 
-        theme(legend.position="none") + 
-        coord_cartesian(xlim=c(-1.5,1.5),ylim=c(1,4)) +
-        theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
-        ggtitle("CU Heat Map - LHP")
-    ggsave(filename, device="png", path="plots/", width = 7, height = 7)
-    # system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin//Users/jrbattles/Library/Python/2.7/bin/aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
-    system(sprintf("/Users/jrbattles/Library/Python/2.7/bin/aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
-	} else { print(c('not generating a plot - too few observations ', nrow(subABIP.LHP.CU))) }
-    
-    filename = str_c(mlbID,"-lhp-hm-SI.png")
-    print(filename)
-    print(nrow(subABIP.LHP.SI))
-    if (nrow(subABIP.LHP.SI) > 8) {
-    strikeFX(subABIP.LHP.SI, geom = "raster", density1 = list(type = "X"),
-        density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, 
-        labeller = labeller(p_throws = pitch_label))) + 
-        theme(legend.position="none") + 
-        coord_cartesian(xlim=c(-1.5,1.5),ylim=c(1,4)) +
-        theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
-        ggtitle("SI Heat Map - LHP")
-    ggsave(filename, device="png", path="plots/", width = 7, height = 7)
-    # system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin//Users/jrbattles/Library/Python/2.7/bin/aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
-    system(sprintf("/Users/jrbattles/Library/Python/2.7/bin/aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
-	} else { print(c('not generating a plot - too few observations ', nrow(subABIP.LHP.SI))) }
-    
-    filename = str_c(mlbID,"-lhp-hm-CH.png")
-    print(filename)
-    print(nrow(subABIP.LHP.CH))
-    if (nrow(subABIP.LHP.CH) > 8 ) {
-    strikeFX(subABIP.LHP.CH, geom = "raster", density1 = list(type = "X"),
-        density2 = list(quant_score = 1), layer = facet_grid(. ~ p_throws, 
-        labeller = labeller(p_throws = pitch_label))) + 
-        theme(legend.position="none") + 
-        coord_cartesian(xlim=c(-1.5,1.5),ylim=c(1,4)) +
-        theme(legend.key = element_blank(), strip.background = element_rect(colour="white", fill="white")) +
-        ggtitle("CH Heat Map - LHP")
-    ggsave(filename, device="png", path="plots/", width = 7, height = 7)
-    # system(sprintf("/Library/Frameworks/Python.framework/Versions/3.5/bin//Users/jrbattles/Library/Python/2.7/bin/aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
-    system(sprintf("/Users/jrbattles/Library/Python/2.7/bin/aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
-	} else { print(c('not generating a plot - too few observations ', nrow(subABIP.LHP.CH))) }
-}
 
 #####################################################################
 #####################################################################
@@ -563,6 +361,48 @@ create_hv_plots <- function(data, mlbID, ...) {
   
 }
 
+###############################################
+####  MASTER CONROL 
+###############################################
+
+## Use dplyer to create SQLite database
+#library(dplyr)
+#my_db2016 <- src_sqlite("pitchRx2016.sqlite3", create = TRUE)
+my_dbProd <- src_sqlite("pitchRxProd.sqlite3", create = TRUE)
+Today <- Sys.Date()
+ThirtyDaysAgo <- Today - 30
+#confirm empty
+#my_db2016
+#my_dbProd
+
+## scrape 2016 game data and store in the database
+#library(pitchRx)
+#scrape(start = "2016-04-03", end = "2016-11-02", suffix = "inning/inning_all.xml", connect = my_db1$con)
+#scrape(start = "2016-04-01", end = "2016-10-31", suffix = "inning/inning_all.xml", connect = my_db2016$con)
+scrape(start = ThirtyDaysAgo, end = Today, suffix = "inning/inning_all.xml", connect = my_dbProd$con)
+
+
+# To speed up execution time, create an index on these three fields.
+#library("dbConnect", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Resources/library")
+
+dbSendQuery(my_dbProd$con, "CREATE INDEX url_atbat ON atbat(url)") 
+dbSendQuery(my_dbProd$con, "CREATE INDEX url_pitch ON pitch(url)")
+dbSendQuery(my_dbProd$con, "CREATE INDEX pitcher_index ON atbat(pitcher_name)")
+dbSendQuery(my_dbProd$con, "CREATE INDEX des_index ON pitch(des)")
+
+#dbSendQuery(my_db2017$con, "CREATE INDEX url_atbat ON atbat(url)") 
+#dbSendQuery(my_db2017$con, "CREATE INDEX url_pitch ON pitch(url)")
+#dbSendQuery(my_db2017$con, "CREATE INDEX pitcher_index ON atbat(pitcher_name)")
+#dbSendQuery(my_db2017$con, "CREATE INDEX des_index ON pitch(des)")
+
+pitch16 <- select(tbl(my_dbProd, "pitch"), gameday_link, num, des, type, tfs, tfs_zulu, id, sz_top, sz_bot, px, pz, pitch_type, count, zone)
+atbat16 <- select(tbl(my_dbProd, "atbat"), gameday_link, num, pitcher, batter, b_height, pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning, inning_side)
+
+#src_tbls(my_dbProd)
+#tbl(my_dbProd, "pitch")
+#head(tbl(my_dbProd, "pitch"),3)
+
+
 # doesn't work '467092'
 # works for all other hitters
 #hitters <- c('547180','457705','502671','518626','502517','518934','445988','471865','120074','514888')
@@ -609,7 +449,6 @@ for (mlbID in hitters) {
     #subAllHits <- subset(joined, type == "X" & des == "In play, no out" | des =="In play, run(s)")
     subAllBallsInPlay <- subset(joined, type == "X")
     
-  
     # generate plots
     create_hv_plots(joined,mlbID)
     #create_HeatMap_plots(subAllBallsInPlay, mlbID)

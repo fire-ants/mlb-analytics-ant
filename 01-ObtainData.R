@@ -8,19 +8,22 @@ library(stringr)
 
 ## Use dplyer to create SQLite database
 #library(dplyr)
-my_db2016 <- src_sqlite("pitchRx2016.sqlite3", create = TRUE)
-my_db2017 <- src_sqlite("pitchRx2017.sqlite3", create = TRUE)
+#my_db2016 <- src_sqlite("pitchRx2016.sqlite3", create = TRUE)
+my_dbProd <- src_sqlite("pitchRxProd.sqlite3", create = TRUE)
+
+Today <- Sys.Date()
+ThirtyDaysAgo <- Today - 30
 
 #confirm empty
-my_db2016
-my_db2017
+#my_db2016
+my_dbProd
 
 
 ## scrape 2016 game data and store in the database
 #library(pitchRx)
 #scrape(start = "2016-04-03", end = "2016-11-02", suffix = "inning/inning_all.xml", connect = my_db1$con)
-scrape(start = "2016-04-01", end = "2016-10-31", suffix = "inning/inning_all.xml", connect = my_db2016$con)
-scrape(start = "2017-06-01", end = "2017-07-31", suffix = "inning/inning_all.xml", connect = my_db2017$con)
+#scrape(start = "2016-04-01", end = "2016-10-31", suffix = "inning/inning_all.xml", connect = my_db2016$con)
+scrape(start = ThirtyDaysAgo, end = Today, suffix = "inning/inning_all.xml", connect = my_dbProd$con)
 
 
 # To speed up execution time, create an index on these three fields.

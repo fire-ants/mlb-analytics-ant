@@ -9,8 +9,8 @@ RUN apt-get update \
 		libsqlite3-dev \
 		python-pip	
 
-COPY /sql_test.R .
+COPY /00-AnalyticsAntMaster.R .
 
 RUN pip install awscli
 
-CMD ["Rscript", "sql_test.R"]
+CMD ["Rscript", "00-AnalyticsAntMaster.R"]

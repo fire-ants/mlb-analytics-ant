@@ -33,7 +33,7 @@ library(XML2R)
 
 ## temporary while loading from SQL database
 ## if running via container
-setwd("/DB")
+setwd("/db")
 #my_db1 <- src_sqlite("pitchRx.sqlite3", create = FALSE)
 
 ## Jason's macbook

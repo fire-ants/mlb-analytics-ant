@@ -2,6 +2,7 @@ FROM rocker/r-base
 
 RUN apt-get update \
 	&& apt-get install -y \
+		libssl-dev \
 		libxml2-dev \
 		libcurl4-gnutls-dev \
 		python \

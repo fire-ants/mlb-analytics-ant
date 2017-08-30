@@ -13,7 +13,7 @@ install.packages("RColorBrewer")
 install.packages("graphics")
 
 #LOADING in RSTUDIO
-#library(tidyverse)
+library(tidyverse)
 library(DBI)
 library(RSQLite)
 library(ggplot2)

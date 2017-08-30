@@ -160,9 +160,9 @@ create_hv_plots <- function(data, mlbID, ...) {
   ## Save plot to working directory in the plots sub-folder
   
   filename = str_c(mlbID,"-rhp-hv-FF.png")
-  ggsave(filename, device="png", path="plots", width = 7, height = 7)
+  ggsave(filename, device="png", path="/db", width = 7, height = 7)
   
-  system(sprintf("aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
+  system(sprintf("aws s3api put-object --bucket mlb-pf --key %1$s --body /db/%1$s", filename))
   
   ## FF Four-seam fastball - LHP
   hv.FF <- data.frame(x = sub.FF.LHP$px, y = sub.FF.LHP$pz, z = sub.FF.LHP$hitter_val)
@@ -182,9 +182,9 @@ create_hv_plots <- function(data, mlbID, ...) {
   
   ## Save plot to working directory in the plots sub-folder
   filename = str_c(mlbID,"-lhp-hv-FF.png")
-  ggsave(filename, device="png", path="plots", width = 7, height = 7)
+  ggsave(filename, device="png", path="/db", width = 7, height = 7)
   
-  system(sprintf("aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
+  system(sprintf("aws s3api put-object --bucket mlb-pf --key %1$s --body /db/%1$s", filename))
   
   ## SL Slider - RHP
   hv.SL <- data.frame(x = sub.SL.RHP$px, y = sub.SL.RHP$pz, z = sub.SL.RHP$hitter_val)
@@ -204,9 +204,9 @@ create_hv_plots <- function(data, mlbID, ...) {
   
   ## Save plot to working directory in the plots sub-folder
   filename = str_c(mlbID,"-rhp-hv-SL.png")
-  ggsave(filename, device="png", path="plots", width = 7, height = 7)
+  ggsave(filename, device="png", path="/db", width = 7, height = 7)
   
-  system(sprintf("aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
+  system(sprintf("aws s3api put-object --bucket mlb-pf --key %1$s --body /db/%1$s", filename))
   
   ## SL Slider - LHP
   hv.SL <- data.frame(x = sub.SL.LHP$px, y = sub.SL.LHP$pz, z = sub.SL.LHP$hitter_val)
@@ -226,9 +226,9 @@ create_hv_plots <- function(data, mlbID, ...) {
   
   ## Save plot to working directory in the plots sub-folder
   filename = str_c(mlbID,"-lhp-hv-SL.png")
-  ggsave(filename, device="png", path="plots", width = 7, height = 7)
+  ggsave(filename, device="png", path="/db", width = 7, height = 7)
   
-  system(sprintf("aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
+  system(sprintf("aws s3api put-object --bucket mlb-pf --key %1$s --body /db/%1$s", filename))
   
   ## CH Four-seam fastball - RHP
   hv.CH <- data.frame(x = sub.CH.RHP$px, y = sub.CH.RHP$pz, z = sub.CH.RHP$hitter_val)
@@ -248,9 +248,9 @@ create_hv_plots <- function(data, mlbID, ...) {
   
   ## Save plot to working directory in the plots sub-folder
   filename = str_c(mlbID,"-rhp-hv-CH.png")
-  ggsave(filename, device="png", path="plots", width = 7, height = 7)
+  ggsave(filename, device="png", path="/db", width = 7, height = 7)
   
-  system(sprintf("aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
+  system(sprintf("aws s3api put-object --bucket mlb-pf --key %1$s --body /db/%1$s", filename))
   
   ## CH Four-seam fastball - LHP
   hv.CH <- data.frame(x = sub.CH.LHP$px, y = sub.CH.LHP$pz, z = sub.CH.LHP$hitter_val)
@@ -270,9 +270,9 @@ create_hv_plots <- function(data, mlbID, ...) {
   
   ## Save plot to working directory in the plots sub-folder
   filename = str_c(mlbID,"-lhp-hv-CH.png")
-  ggsave(filename, device="png", path="plots", width = 7, height = 7)
+  ggsave(filename, device="png", path="/db", width = 7, height = 7)
   
-  system(sprintf("aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
+  system(sprintf("aws s3api put-object --bucket mlb-pf --key %1$s --body /db/%1$s", filename))
   
   ## CU Four-seam fastball - RHP
   hv.CU <- data.frame(x = sub.CU.RHP$px, y = sub.CU.RHP$pz, z = sub.CU.RHP$hitter_val)
@@ -292,9 +292,9 @@ create_hv_plots <- function(data, mlbID, ...) {
   
   ## Save plot to working directory in the plots sub-folder
   filename = str_c(mlbID,"-rhp-hv-CU.png")
-  ggsave(filename, device="png", path="plots", width = 7, height = 7)
+  ggsave(filename, device="png", path="/db", width = 7, height = 7)
   
-  system(sprintf("aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
+  system(sprintf("aws s3api put-object --bucket mlb-pf --key %1$s --body /db/%1$s", filename))
   
   ## CU Four-seam fastball - LHP
   hv.CU <- data.frame(x = sub.CU.LHP$px, y = sub.CU.LHP$pz, z = sub.CU.LHP$hitter_val)
@@ -314,9 +314,9 @@ create_hv_plots <- function(data, mlbID, ...) {
   
   ## Save plot to working directory in the plots sub-folder
   filename = str_c(mlbID,"-lhp-hv-CU.png")
-  ggsave(filename, device="png", path="plots", width = 7, height = 7)
+  ggsave(filename, device="png", path="/db", width = 7, height = 7)
   
-  system(sprintf("aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
+  system(sprintf("aws s3api put-object --bucket mlb-pf --key %1$s --body /db/%1$s", filename))
   
   ## SI Four-seam fastball - RHP
   hv.SI <- data.frame(x = sub.SI.RHP$px, y = sub.SI.RHP$pz, z = sub.SI.RHP$hitter_val)
@@ -336,9 +336,9 @@ create_hv_plots <- function(data, mlbID, ...) {
   
   ## Save plot to working directory in the plots sub-folder
   filename = str_c(mlbID,"-rhp-hv-SI.png")
-  ggsave(filename, device="png", path="plots", width = 7, height = 7)
+  ggsave(filename, device="png", path="/db", width = 7, height = 7)
   
-  system(sprintf("aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
+  system(sprintf("aws s3api put-object --bucket mlb-pf --key %1$s --body /db/%1$s", filename))
   
   ## SI Four-seam fastball - LHP
   hv.SI <- data.frame(x = sub.SI.LHP$px, y = sub.SI.LHP$pz, z = sub.SI.LHP$hitter_val)
@@ -358,9 +358,9 @@ create_hv_plots <- function(data, mlbID, ...) {
   
   ## Save plot to working directory in the plots sub-folder
   filename = str_c(mlbID,"-lhp-hv-SI.png")
-  ggsave(filename, device="png", path="plots", width = 7, height = 7)
+  ggsave(filename, device="png", path="/db", width = 7, height = 7)
   
-  system(sprintf("aws s3api put-object --bucket mlb-pf --key %1$s --body ./plots/%1$s", filename))
+  system(sprintf("aws s3api put-object --bucket mlb-pf --key %1$s --body /db/%1$s", filename))
   
 }
 

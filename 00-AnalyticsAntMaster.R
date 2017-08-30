@@ -25,7 +25,7 @@ library(dbplyr)
 library(graphics)
 library(RColorBrewer)
 library(XML2R)
-library(devtools)
+#library(devtools)
 library(dbConnect)
 
 ## temporary while loading from SQL database

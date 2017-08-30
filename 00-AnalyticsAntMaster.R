@@ -30,7 +30,7 @@ library(dbConnect)
 
 ## temporary while loading from SQL database
 ## if running via container
-#setwd("/")
+setwd("/DB")
 #my_db1 <- src_sqlite("pitchRx.sqlite3", create = FALSE)
 
 ## Jason's macbook

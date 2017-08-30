@@ -13,7 +13,7 @@ install.packages("RColorBrewer")
 install.packages("graphics")
 
 #LOADING in RSTUDIO
-library(tidyverse)
+#library(tidyverse)
 library(DBI)
 library(RSQLite)
 library(ggplot2)
@@ -410,7 +410,7 @@ atbat16 <- select(tbl(my_dbProd, "atbat"), gameday_link, num, pitcher, batter, b
 #mlbID <- '502671'
 
 hitters <- c('514888','453568','457759','519317','458015','547180','592450','545361','457705','502671','518626','502517','518934','471865','592178','519346','460075')
-hitters <- c('514888','453568')
+#hitters <- c('514888','453568')
 
 for (mlbID in hitters) {
     print(mlbID)

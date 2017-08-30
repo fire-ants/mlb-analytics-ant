@@ -8,9 +8,10 @@ install.packages("pitchRx")
 install.packages("stringr")
 install.packages("akima")
 install.packages("dplyr")
+install.packages("dbplyr")
 install.packages("ggplot2")
 install.packages("RColorBrewer")
-install.packages("graphics")
+#install.packages("graphics")
 
 #LOADING in RSTUDIO
 library(tidyverse)

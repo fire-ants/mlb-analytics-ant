@@ -11,7 +11,7 @@ install.packages("dplyr")
 install.packages("dbplyr")
 install.packages("ggplot2")
 install.packages("RColorBrewer")
-install.packages("dbConnect")
+#install.packages("dbConnect")
 #install.packages("graphics")
 
 #LOADING in RSTUDIO
@@ -28,7 +28,7 @@ library(graphics)
 library(RColorBrewer)
 library(XML2R)
 #library(devtools)
-library(dbConnect)
+#library(dbConnect)
 
 ## temporary while loading from SQL database
 ## if running via container

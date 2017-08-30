@@ -11,6 +11,7 @@ install.packages("dplyr")
 install.packages("dbplyr")
 install.packages("ggplot2")
 install.packages("RColorBrewer")
+install.packages("dbConnect")
 #install.packages("graphics")
 
 #LOADING in RSTUDIO

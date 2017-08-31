@@ -8,8 +8,8 @@ install.packages("pitchRx")
 install.packages("stringr")
 install.packages("akima")
 install.packages("dplyr")
-install.packages("dbplyr")
-install.packages("ggplot2")
+#install.packages("dbplyr")  # included with tidyverse
+#install.packages("ggplot2")  # included with tidyverse
 install.packages("RColorBrewer")
 #install.packages("dbConnect")
 #install.packages("graphics")
@@ -36,6 +36,8 @@ library(XML2R)
 setwd("/db")
 #my_db1 <- src_sqlite("pitchRx.sqlite3", create = FALSE)
 
+
+#setwd("/Users/cohend/Documents/code/plots")
 ## Jason's macbook
 #setwd("/Users/jrbattles/GitHub/mlb-analytics-ant")
 #my_db1 <- src_sqlite("pitchRx.sqlite3", create = FALSE)
@@ -109,6 +111,9 @@ fix_quant_score <- function(event) {
 #####################################################################
 
 create_hv_plots <- function(data, mlbID, ...) {
+  
+  #manual debugging
+  #data <- subAllBallsInPlay
   
   ## Add Batter's strike zone
   topKzone = mean(data$sz_top, na.rm = TRUE)
@@ -371,9 +376,10 @@ create_hv_plots <- function(data, mlbID, ...) {
 ## Use dplyer to create SQLite database
 #library(dplyr)
 #my_db2016 <- src_sqlite("pitchRx2016.sqlite3", create = TRUE)
+
 my_dbProd <- src_sqlite("pitchRxProd.sqlite3", create = TRUE)
-Today <- Sys.Date()
-ThirtyDaysAgo <- Today - 30
+#my_dbProd <- src_sqlite("pitchRxProd.sqlite3", create = FALSE)
+
 #confirm empty
 #my_db2016
 #my_dbProd
@@ -382,37 +388,47 @@ ThirtyDaysAgo <- Today - 30
 #library(pitchRx)
 #scrape(start = "2016-04-03", end = "2016-11-02", suffix = "inning/inning_all.xml", connect = my_db1$con)
 #scrape(start = "2016-04-01", end = "2016-10-31", suffix = "inning/inning_all.xml", connect = my_db2016$con)
-scrape(start = ThirtyDaysAgo, end = Today, suffix = "inning/inning_all.xml", connect = my_dbProd$con)
-
 
 # To speed up execution time, create an index on these three fields.
 #library("dbConnect", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Resources/library")
+
+####################################
+##  Working code
+
+Today <- Sys.Date()
+ThirtyDaysAgo <- Today - 90
+scrape(start = ThirtyDaysAgo, end = Today, suffix = "inning/inning_all.xml", connect = my_dbProd$con)
 
 dbSendQuery(my_dbProd$con, "CREATE INDEX url_atbat ON atbat(url)") 
 dbSendQuery(my_dbProd$con, "CREATE INDEX url_pitch ON pitch(url)")
 dbSendQuery(my_dbProd$con, "CREATE INDEX pitcher_index ON atbat(pitcher_name)")
 dbSendQuery(my_dbProd$con, "CREATE INDEX des_index ON pitch(des)")
 
+##  End Scrape Code
+#####################################
+
 #dbSendQuery(my_db2017$con, "CREATE INDEX url_atbat ON atbat(url)") 
 #dbSendQuery(my_db2017$con, "CREATE INDEX url_pitch ON pitch(url)")
 #dbSendQuery(my_db2017$con, "CREATE INDEX pitcher_index ON atbat(pitcher_name)")
 #dbSendQuery(my_db2017$con, "CREATE INDEX des_index ON pitch(des)")
 
-pitch16 <- select(tbl(my_dbProd, "pitch"), gameday_link, num, des, type, tfs, tfs_zulu, id, sz_top, sz_bot, px, pz, pitch_type, count, zone)
-atbat16 <- select(tbl(my_dbProd, "atbat"), gameday_link, num, pitcher, batter, b_height, pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning, inning_side)
-
 #src_tbls(my_dbProd)
 #tbl(my_dbProd, "pitch")
 #head(tbl(my_dbProd, "pitch"),3)
 
+pitch16 <- select(tbl(my_dbProd, "pitch"), gameday_link, num, des, type, tfs, tfs_zulu, id, sz_top, sz_bot, px, pz, pitch_type, count, zone)
+atbat16 <- select(tbl(my_dbProd, "atbat"), gameday_link, num, pitcher, batter, b_height, pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning, inning_side)
 
 # doesn't work '467092'
 # works for all other hitters
 #hitters <- c('547180','457705','502671','518626','502517','518934','445988','471865','120074','514888')
 #hitters <- c('502671','518626','502517','518934','445988','471865','120074','514888')
-#mlbID <- '502671'
 
-hitters <- c('514888','453568','457759','519317','458015','547180','592450','545361','457705','502671','518626','502517','518934','471865','592178','519346','460075')
+#mlbID <- '547180'
+
+hitters <- c('514888','453568','457759','519317','458015','592450','545361','457705','502671','518626','502517','518934','471865','592178','519346','460075')
+## NOT Working for '547180',
+
 #hitters <- c('514888','453568')
 
 for (mlbID in hitters) {

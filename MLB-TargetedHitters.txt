@@ -1,18 +1,18 @@
-514888  Jose Altuve
-453568  Charlie Blackmon
-457759  Justin Turner
-519317  Giancarlo Stanton
-458015  Joey Votto
-547180  Bryce Harper
-641355  Cody Bellinger
-592450  Aaron Judge
-545361  Mike Trout
-457705  McCutchen
-502671  Goldschmidt
-518626  Donaldson
-502517  Murphy
-518934  LaMahieu
-471865  Gonzalez
-592178  Bryant
-519346  Thames
-460075  Braun
+514888  Jose Altuve https://d3k2oh6evki4b7.cloudfront.net/req/201707131/images/headshots/f/f0e8fd62_mlbam.jpg
+453568  Charlie Blackmon  https://d3k2oh6evki4b7.cloudfront.net/req/201707131/images/headshots/1/12154e57_mlbam.jpg
+457759  Justin Turner https://d3k2oh6evki4b7.cloudfront.net/req/201707131/images/headshots/f/fbc00dba_mlbam.jpg
+519317  Giancarlo Stanton https://d3k2oh6evki4b7.cloudfront.net/req/201707131/images/headshots/8/87f6986b_mlbam.jpg
+458015  Joey Votto  https://d3k2oh6evki4b7.cloudfront.net/req/201707131/images/headshots/9/9f4721ab_mlbam.jpg
+547180  Bryce Harper  https://d3k2oh6evki4b7.cloudfront.net/req/201707131/images/headshots/9/9f4721ab_mlbam.jpg
+641355  Cody Bellinger  https://d3k2oh6evki4b7.cloudfront.net/req/201707131/images/headshots/3/32775691_mlbam.jpg
+592450  Aaron Judge https://d3k2oh6evki4b7.cloudfront.net/req/201707131/images/headshots/0/06c9f502_mlbam.jpg
+545361  Mike Trout  https://d3k2oh6evki4b7.cloudfront.net/req/201707131/images/headshots/f/f322d40f_mlbam.jpg
+457705  McCutchen https://d3k2oh6evki4b7.cloudfront.net/req/201707131/images/headshots/f/f3998f8d_mlbam.jpg
+502671  Goldschmidt https://d3k2oh6evki4b7.cloudfront.net/req/201707131/images/headshots/6/6b37a7f2_mlbam.jpg
+518626  Donaldson https://d3k2oh6evki4b7.cloudfront.net/req/201707131/images/headshots/3/3af4cc98_mlbam.jpg
+502517  Daniel Murphy https://d3k2oh6evki4b7.cloudfront.net/req/201707131/images/headshots/1/17225395_mlbam.jpg
+518934  LeMahieu  https://d3k2oh6evki4b7.cloudfront.net/req/201707131/images/headshots/0/07868aab_mlbam.jpg
+471865  Carolos Gonzalez  https://d3k2oh6evki4b7.cloudfront.net/req/201707131/images/headshots/0/07868aab_mlbam.jpg
+592178  Bryant  https://d3k2oh6evki4b7.cloudfront.net/req/201707131/images/headshots/1/1d358f93_mlbam.jpg
+519346  Thames  https://d3k2oh6evki4b7.cloudfront.net/req/201707131/images/headshots/a/a96c3457_mlbam.jpg
+460075  Braun https://d3k2oh6evki4b7.cloudfront.net/req/201707131/images/headshots/8/8b4db8f5_mlbam.jpg

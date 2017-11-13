@@ -13,6 +13,8 @@ install.packages("ggplot2")
 install.packages("RColorBrewer")
 #install.packages("dbConnect")
 #install.packages("graphics")
+install.packages("RJSONIO")  # USED for Pulling from CF API
+install.packages("RCurl")    # USED for Pulling from CF API
 
 #LOADING in RSTUDIO
 library(tidyverse)
@@ -27,6 +29,9 @@ library(dbplyr)
 library(graphics)
 library(RColorBrewer)
 library(XML2R)
+library(RJSONIO)    # USED for Pulling from CF API
+library(RCurl)      # USED for Pulling from CF API
+
 ####################
 #library(devtools)
 #library(dbConnect)
@@ -423,13 +428,30 @@ atbat16 <- select(tbl(my_dbProd, "atbat"), gameday_link, num, pitcher, batter, b
 # works for all other hitters
 #hitters <- c('547180','457705','502671','518626','502517','518934','445988','471865','120074','514888')
 #hitters <- c('502671','518626','502517','518934','445988','471865','120074','514888')
-
 #mlbID <- '547180'
 
-hitters <- c('514888','453568','457759','519317','458015','592450','545361','457705','502671','518626','502517','518934','471865','592178','519346','460075')
-## NOT Working for '547180',
+## THIS IS WHERE WE USED TO HARD CODE THE HITTER LIST
+## REPLACED BY PULLING A LIST OF HITTERS FROM AARON's CF API
+#hitters <- c('514888','453568','457759','519317','458015','592450','545361','457705','502671','518626','502517','518934','471865','592178','519346','460075')
 
+## THIS IS FOR NOTES AND TESTING
+## NOT Working for '547180',
 #hitters <- c('514888','453568')
+
+########################################################################
+## Which Hitters to Process?
+# This code creates a list of MLBIDs that are published in the API
+########################################################################
+
+playerAPIList <- fromJSON(getURL("http://mlb-player-api.cfapps.io/player/"))
+
+hitters <- vector("list", length(playerAPIList))
+
+for (i in 1:length(playerAPIList)) {
+  #print(playerAPIList[[i]][["mlbid"]])
+  hitters[i] <- as.character(playerAPIList[[i]][["mlbid"]])
+}
+
 
 for (mlbID in hitters) {
     print(mlbID)

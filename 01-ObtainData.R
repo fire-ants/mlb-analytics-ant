@@ -5,29 +5,54 @@ library(RColorBrewer)
 library(pitchRx)    ## thank you Carson Sievert!!!
 library(dplyr)      ## thank you Hadley Wickham
 library(stringr)
+library(lubridate)
+library(RSQLite)
 
 ## Use dplyer to create SQLite database
 #library(dplyr)
 #my_db2016 <- src_sqlite("pitchRx2016.sqlite3", create = TRUE)
-my_dbProd <- src_sqlite("pitchRxProd.sqlite3", create = TRUE)
+my_dbProd <- src_sqlite("pitchRxProd2018.sqlite3", create = TRUE)
 
 Today <- Sys.Date()
 ThirtyDaysAgo <- Today - 30
+ThirtyDaysAhead = Today + months(1)
+
+WhatMonth <- month(Today)
 
 #confirm empty
 #my_db2016
 my_dbProd
 
 
-## scrape 2016 game data and store in the database
+## scrape game data and store in the database
+## 2017 MLB season was from 02APR to 01NOV (inclusive of postseason)
+
 #library(pitchRx)
-#scrape(start = "2016-04-03", end = "2016-11-02", suffix = "inning/inning_all.xml", connect = my_db1$con)
+dat1308 <- scrape(start = "2013-08-01", end = "2013-08-01", suffix = "inning/inning_all.xml")
+dat1605 <- scrape(start = "2016-05-01", end = "2016-05-01", suffix = "inning/inning_all.xml")
+dat1611 <- scrape(start = "2016-11-01", end = "2016-11-02", suffix = "inning/inning_all.xml")
+dat1705 <- scrape(start = "2017-05-01", end = "2017-05-05", suffix = "inning/inning_all.xml")
+dat1707 <- scrape(start = "2017-07-01", end = "2017-07-05", suffix = "inning/inning_all.xml")
+dat1701 <- scrape(start = "2017-01-01", end = "2017-11-30", suffix = "inning/inning_all.xml")
+dat1611 <- scrape(start = "2016-11-01", end = "2016-11-02", suffix = "inning/inning_all.xml")
+dat1804 <- scrape(start = "2018-04-02", end = "2018-04-30", suffix = "inning/inning_all.xml")
+
+# 2016 season
+#scrape(start = "2016-04-03", end = "2016-11-02", suffix = "inning/inning_all.xml", connect = my_dbProd$con)
+
+scrape(start = "2017-04-02", end = "2017-11-01", suffix = "inning/inning_all.xml", connect = my_dbProd$con)
 #scrape(start = "2016-04-01", end = "2016-10-31", suffix = "inning/inning_all.xml", connect = my_db2016$con)
 scrape(start = ThirtyDaysAgo, end = Today, suffix = "inning/inning_all.xml", connect = my_dbProd$con)
 
 
 # To speed up execution time, create an index on these three fields.
 library("dbConnect", lib.loc="/Library/Frameworks/R.framework/Versions/3.3/Resources/library")
+
+dbSendQuery(my_dbProd$con, "CREATE INDEX url_atbat ON atbat(url)") 
+dbSendQuery(my_dbProd$con, "CREATE INDEX url_pitch ON pitch(url)")
+dbSendQuery(my_dbProd$con, "CREATE INDEX pitcher_index ON atbat(pitcher_name)")
+dbSendQuery(my_dbProd$con, "CREATE INDEX des_index ON pitch(des)")
+
 
 dbSendQuery(my_db2016$con, "CREATE INDEX url_atbat ON atbat(url)") 
 dbSendQuery(my_db2016$con, "CREATE INDEX url_pitch ON pitch(url)")

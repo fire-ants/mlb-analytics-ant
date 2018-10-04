@@ -3,8 +3,8 @@ install.packages("devtools")
 library(devtools)
 install_github("cpsievert/pitchRx", force = T)
 
-## This R command lists all the packages installed by the user 
-## (ignoring packages that come with R such as base and foreign) and the 
+## This R command lists all the packages installed by the user
+## (ignoring packages that come with R such as base and foreign) and the
 ## package versions.
 ip <- as.data.frame(installed.packages()[,c(1,3:4)])
 rownames(ip) <- NULL
@@ -29,7 +29,7 @@ options(repos = oldRepos)
 unCheckpoint(oldLibPaths)
 .libPaths()
 
-## [1] "C:/tmp/Rtmp69rJVn/Rinst1e3c1470709e"          
+## [1] "C:/tmp/Rtmp69rJVn/Rinst1e3c1470709e"
 ## [2] "C:/Users/richcala/Documents/R/win-library/3.5"
 ## [3] "C:/Program Files/R/R-3.5.1/library"
 
@@ -43,7 +43,7 @@ dir.create(file.path(tempdir(), ".checkpoint"), recursive = TRUE, showWarnings =
 ## Create a checkpoint by specifying a snapshot date
 
 library(checkpoint)
-checkpoint("2018-10-02", project = mlb-analytics-ant, 
+checkpoint("2018-10-02", project = mlb-analytics-ant,
            checkpointLocation = tempdir())
 
 #cleanup

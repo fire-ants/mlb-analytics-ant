@@ -8,6 +8,10 @@ packages:
     - name: dbplyr
     - name: MASS
     - name: mgcv
+    - name: tidyverse
+    - name: RColorBrewer
+    - name: RJSONIO
+    - name: RCurl
   - packages:
     - name: pitchRx
 num_threads: 4

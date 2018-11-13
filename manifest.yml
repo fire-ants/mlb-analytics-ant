@@ -6,4 +6,3 @@ applications:
   health-check-type: none
   command: tail -f /dev/null
   no-route: true
-  

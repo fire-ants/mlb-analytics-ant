@@ -35,12 +35,12 @@ jobs:
             mlb_db_username: ((mlb_db_username))
             mlb_db_password: ((mlb_db_password))
 
-- name: run_datafresh
+- name: run_analytics
   plan: 
-    - get: mlb-datafresh
-      resource: mlb-datafresh
-    - task: run_datafresh
-      file: mlb-datafresh/ci/tasks/run_datafresh.yml
+    - get: mlb-analytics-ant
+      resource: mlb-analytics-ant
+    - task: run_analytics-ant
+      file: mlb-analytics-ant/ci/tasks/run_analytics.yml
       params:
         CF_USER: ((cf-username))
         CF_PASSWORD: ((cf-password))

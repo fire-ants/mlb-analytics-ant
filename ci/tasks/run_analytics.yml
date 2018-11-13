@@ -1,0 +1,25 @@
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: governmentpaas/cf-cli
+    tag: latest
+
+inputs:
+- name: mlb-datafresh
+params:
+  CF_USER:
+  CF_PASSWORD:
+  CF_ORG:
+  CF_SPACE:
+# outputs:
+# - name: 
+
+run:
+  path: sh
+  args:
+    - -exc
+    - |
+      cf login -a api.run.pivotal.io -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
+      cf run-task MLB-AnalyticsAnt "R -f 00-AnalyticsAntMaster.R"

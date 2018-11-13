@@ -1,8 +1,8 @@
 resources:
-- name: mlb-datafresh
+- name: mlb-analytics-ant
   type: git
   source:
-    uri: git@github.com:fire-ants/mlb-analytics-ant-datafresh.git
+    uri: git@github.com:fire-ants/mlb-analytics-ant.git
     branch: ((git-branch))
     private_key: ((git-private-key))
 - name: pcf-prod
@@ -15,18 +15,18 @@ resources:
     password: ((cf-password))
     skip_cert_check: false
 jobs: 
-- name: build
+- name: deploy
   plan:
     - aggregate:
-      - get: mlb-datafresh
-        resource: mlb-datafresh
+      - get: mlb-analytics-ant
+        resource: mlb-analytics-ant
         trigger: true
     - task: list_directory
-      file: mlb-datafresh/ci/tasks/list_directory.yml
+      file: mlb-analytics-ant/ci/tasks/list_directory.yml
     - put: pcf-prod
       params:
-        manifest: mlb-datafresh/manifest.yml
-        path: mlb-datafresh
+        manifest: mlb-analytics-ant/manifest.yml
+        path: mlb-analytics-ant
         show_app_log: true
         environment_variables:
             mlb_db_dbname: ((mlb_db_dbname))

@@ -7,3 +7,4 @@
 *.png
 packrat/lib*/
 .pkg
+ci/pipeline-params.yml

@@ -22,4 +22,4 @@ run:
     - -exc
     - |
       cf login -a api.run.pivotal.io -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
-      cf run-task MLB-DatafreshAnt "R -f 00-mlb-datafresh.R"
+      cf run-task MLB-AnalyticsAnt "R -f 00-AnalyticsAntMaster.R"

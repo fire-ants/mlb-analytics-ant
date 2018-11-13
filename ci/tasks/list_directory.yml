@@ -19,3 +19,4 @@ run:
     - |
       ls -ltra
       echo Hello world
+      uname -sra

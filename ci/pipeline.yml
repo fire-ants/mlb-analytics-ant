@@ -1,0 +1,48 @@
+resources:
+- name: mlb-datafresh
+  type: git
+  source:
+    uri: git@github.com:fire-ants/mlb-analytics-ant-datafresh.git
+    branch: ((git-branch))
+    private_key: ((git-private-key))
+- name: pcf-prod
+  type: cf
+  source:
+    api: api.run.pivotal.io
+    organization: ((cf-org))
+    space: ((cf-space))
+    username: ((cf-username))
+    password: ((cf-password))
+    skip_cert_check: false
+jobs: 
+- name: build
+  plan:
+    - aggregate:
+      - get: mlb-datafresh
+        resource: mlb-datafresh
+        trigger: true
+    - task: list_directory
+      file: mlb-datafresh/ci/tasks/list_directory.yml
+    - put: pcf-prod
+      params:
+        manifest: mlb-datafresh/manifest.yml
+        path: mlb-datafresh
+        show_app_log: true
+        environment_variables:
+            mlb_db_dbname: ((mlb_db_dbname))
+            mlb_db_hostname: ((mlb_db_hostname))
+            mlb_db_port: ((mlb_db_port))
+            mlb_db_username: ((mlb_db_username))
+            mlb_db_password: ((mlb_db_password))
+
+- name: run_datafresh
+  plan: 
+    - get: mlb-datafresh
+      resource: mlb-datafresh
+    - task: run_datafresh
+      file: mlb-datafresh/ci/tasks/run_datafresh.yml
+      params:
+        CF_USER: ((cf-username))
+        CF_PASSWORD: ((cf-password))
+        CF_ORG: ((cf-org))
+        CF_SPACE: ((cf-space))

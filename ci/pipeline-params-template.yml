@@ -1,0 +1,11 @@
+git-branch: master
+git-private-key: 
+cf-username:
+cf-password: 
+cf-org: 
+cf-space:
+mlb_db_dbname:
+mlb_db_hostname:
+mlb_db_port:
+mlb_db_username: 
+mlb_db_password: 

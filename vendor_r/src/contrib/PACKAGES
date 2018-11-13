@@ -1,0 +1,4 @@
+Package: pitchRx
+Version: 1.8.4
+License: MIT + file LICENSE
+NeedsCompilation: yes

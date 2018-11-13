@@ -3,7 +3,7 @@ install.packages("devtools")
 library(devtools)
 install_github("cpsievert/pitchRx", force = T)
 
-## This R command lists all the packages installed by the user
+3## This R command lists all the packages installed by the user
 ## (ignoring packages that come with R such as base and foreign) and the
 ## package versions.
 ip <- as.data.frame(installed.packages()[,c(1,3:4)])
@@ -69,3 +69,6 @@ head(pkgs.to.remove)
 
 # remove the packages
 sapply(pkgs.to.remove, remove.packages, lib = path.lib)
+
+
+

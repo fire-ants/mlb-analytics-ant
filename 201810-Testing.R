@@ -1,7 +1,8 @@
 install.packages("devtools")
-library(devtools)
+install.packages("git2r")
 install.packages("ggplot2")
-install_github("cpsievert/pitchRx")
+library(devtools)
+install_github("cpsievert/pitchRx", force = T)
 
 install.packages("pitchRx")
 install.packages("dplyr")

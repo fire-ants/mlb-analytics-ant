@@ -7,7 +7,7 @@ image_resource:
     tag: latest
 
 inputs:
-- name: mlb-datafresh
+- name: mlb-analytics-ant
 params:
   CF_USER:
   CF_PASSWORD:

@@ -1,0 +1,37 @@
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: governmentpaas/cf-cli
+    tag: latest
+
+inputs:
+- name: mlb-analytics-ant
+params:
+  CF_USER:
+  CF_PASSWORD:
+  CF_ORG:
+  CF_SPACE:
+  mlb_db_dbname:
+  mlb_db_hostname:
+  mlb_db_port:
+  mlb_db_username:
+  mlb_db_password:
+# outputs:
+# - name: 
+
+run:
+  path: sh
+  args:
+    - -exc
+    - |
+      cd mlb-analytics-ant
+      cf login -a api.run.pivotal.io -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
+      export CF_STAGING_TIMEOUT=30
+      cf push --no-start --no-route --health-check-type none
+      cf set-env MLB-AnalyticsAnt mlb_db_dbname $mlb_db_name
+      cf set-env MLB-AnalyticsAnt mlb_db_hostname $mlb_db_hostname
+      cf set-env MLB-AnalyticsAnt mlb_db_port $mlb_db_port
+      cf set-env MLB-AnalyticsAnt mlb_db_username $mlb_db_username
+      cf set-env MLB-AnalyticsAnt mlb_db_password $mlb_db_password

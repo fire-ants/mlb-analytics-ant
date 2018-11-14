@@ -15,14 +15,8 @@ jobs:
     - task: list_directory
       file: mlb-analytics-ant/ci/tasks/list_directory.yml
     - task: cf-push
-      file: mlb/analytics-ant/ci/tasks/cf-push.yml
-    put: pcf-prod
-      params:
-        manifest: mlb-analytics-ant/manifest.yml
-        path: mlb-analytics-ant
-        show_app_log: true
-        environment_variables:
-
+      file: mlb/analytics-ant/ci/tasks/cf_push.yml
+    
 
 - name: run_analytics
   plan: 

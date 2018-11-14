@@ -12,6 +12,7 @@ packages:
     - name: RColorBrewer
     - name: RJSONIO
     - name: RCurl
+    - name: akima
   - packages:
     - name: pitchRx
 num_threads: 4

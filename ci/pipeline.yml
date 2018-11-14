@@ -15,7 +15,17 @@ jobs:
     - task: list_directory
       file: mlb-analytics-ant/ci/tasks/list_directory.yml
     - task: cf-push
-      file: mlb/analytics-ant/ci/tasks/cf_push.yml
+      file: mlb-analytics-ant/ci/tasks/cf_push.yml
+      params:
+        CF_USER: ((cf-username))
+        CF_PASSWORD: ((cf-password))
+        CF_ORG: ((cf-org))
+        CF_SPACE: ((cf-space))
+        mlb_db_dbname: ((mlb_db_dbname))
+        mlb_db_hostname: ((mlb_db_hostname))
+        mlb_db_port: ((mlb_db_port))
+        mlb_db_username: ((mlb_db_username))
+        mlb_db_password: ((mlb_db_password))
     
 
 - name: run_analytics

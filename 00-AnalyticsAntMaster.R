@@ -1,20 +1,20 @@
 ## load libraries
 #INSTALL PRIOR TO RUNNING IN CLOUD
-install.packages("tidyverse")
-install.packages("DBI")
-install.packages("RSQLite")
-install.packages("XML2R",dependencies=TRUE)
-install.packages("pitchRx")
-install.packages("stringr")
-install.packages("akima")
-install.packages("dplyr")
-install.packages("dbplyr")
-install.packages("ggplot2")
-install.packages("RColorBrewer")
-#install.packages("dbConnect")
-#install.packages("graphics")
-install.packages("RJSONIO")  # USED for Pulling from CF API
-install.packages("RCurl")    # USED for Pulling from CF API
+# install.packages("tidyverse")
+# install.packages("DBI")
+# install.packages("RSQLite")
+# install.packages("XML2R",dependencies=TRUE)
+# install.packages("pitchRx")
+# install.packages("stringr")
+# install.packages("akima")
+# install.packages("dplyr")
+# install.packages("dbplyr")
+# install.packages("ggplot2")
+# install.packages("RColorBrewer")
+# #install.packages("dbConnect")
+# #install.packages("graphics")
+# install.packages("RJSONIO")  # USED for Pulling from CF API
+# install.packages("RCurl")    # USED for Pulling from CF API
 
 #LOADING in RSTUDIO
 library(tidyverse)
@@ -38,7 +38,8 @@ library(RCurl)      # USED for Pulling from CF API
 
 ## temporary while loading from SQL database
 ## if running via container
-setwd("/db")
+#setwd("/db")
+
 #my_db1 <- src_sqlite("pitchRx.sqlite3", create = FALSE)
 
 
@@ -106,8 +107,8 @@ fix_quant_score <- function(event) {
 #data.fin.month <- scrape(start = "2016-09-25", end = "2016-10-24", connect = my_db1$con)
 #data.season 
 
-#pitch16 <- select(tbl(my_db1, "pitch"), gameday_link, num, des, type, tfs, tfs_zulu, id, sz_top, sz_bot, px, pz, pitch_type, count, zone)
-#atbat16 <- select(tbl(my_db1, "atbat"), gameday_link, num, pitcher, batter, b_height, pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning, inning_side)
+#pitchesDF <- select(tbl(my_db1, "pitch"), gameday_link, num, des, type, tfs, tfs_zulu, id, sz_top, sz_bot, px, pz, pitch_type, count, zone)
+#atbatsDF <- select(tbl(my_db1, "atbat"), gameday_link, num, pitcher, batter, b_height, pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning, inning_side)
 
 
 
@@ -170,9 +171,9 @@ create_hv_plots <- function(data, mlbID, ...) {
   ## Save plot to working directory in the plots sub-folder
   
   filename = str_c(mlbID,"-rhp-hv-FF.png")
-  ggsave(filename, device="png", path="/db", width = 7, height = 7)
+  ggsave(filename, device="png", path=".", width = 7, height = 7)
   
-  system(sprintf("aws s3api put-object --bucket mlb-pf --key %1$s --body /db/%1$s", filename))
+  system(sprintf("aws s3api put-object --bucket mlb-pf --key %s --body ./%s" , filename))
   
   ## FF Four-seam fastball - LHP
   hv.FF <- data.frame(x = sub.FF.LHP$px, y = sub.FF.LHP$pz, z = sub.FF.LHP$hitter_val)
@@ -383,7 +384,10 @@ create_hv_plots <- function(data, mlbID, ...) {
 #my_db2016 <- src_sqlite("pitchRx2016.sqlite3", create = TRUE)
 
 #my_dbProd <- src_sqlite("pitchRxProd.sqlite3", create = TRUE)
-my_dbProd <- src_sqlite("pitchRxProd.sqlite3", create = FALSE)
+#my_dbProd <- src_sqlite("pitchRxProd.sqlite3", create = FALSE)
+### New MySQL db connection
+my_pitchrx_db <- src_mysql(dbname = Sys.getenv("mlb_db_dbname"), host = Sys.getenv("mlb_db_hostname"), port = 3306, user = Sys.getenv("mlb_db_username"), password = Sys.getenv("mlb_db_password"))
+
 
 #confirm empty
 #my_db2016
@@ -421,8 +425,12 @@ my_dbProd <- src_sqlite("pitchRxProd.sqlite3", create = FALSE)
 #tbl(my_dbProd, "pitch")
 #head(tbl(my_dbProd, "pitch"),3)
 
-pitch16 <- select(tbl(my_dbProd, "pitch"), gameday_link, num, des, type, tfs, tfs_zulu, id, sz_top, sz_bot, px, pz, pitch_type, count, zone)
-atbat16 <- select(tbl(my_dbProd, "atbat"), gameday_link, num, pitcher, batter, b_height, pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning, inning_side)
+#pitch16 <- select(tbl(my_dbProd, "pitch"), gameday_link, num, des, type, tfs, tfs_zulu, id, sz_top, sz_bot, px, pz, pitch_type, count, zone)
+#atbat16 <- select(tbl(my_dbProd, "atbat"), gameday_link, num, pitcher, batter, b_height, pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning, inning_side)
+
+### Load pitch and atbat data frames
+pitchesDF <- select(tbl(my_pitchrx_db, "pitch"), gameday_link, num, des, type, tfs, tfs_zulu, id, end_speed, pitch_type, count, zone)
+atbatsDF <- select(tbl(my_pitchrx_db, "atbat"), gameday_link, num, pitcher, batter, b_height, pitcher_name, p_throws, batter_name, stand, atbat_des, event, inning, inning_side)
 
 # doesn't work '467092'
 # works for all other hitters
@@ -456,10 +464,10 @@ for (i in 1:length(playerAPIList)) {
 for (mlbID in hitters) {
     print(mlbID)
     # filter atbats by mlbID
-    TargetedAtBats <- filter(atbat16, batter == mlbID)
+    TargetedAtBats <- filter(atbatsDF, batter == mlbID)
     
     # join filtered atbats to all pitches
-    pitchesJoin <- collect(inner_join(pitch16, TargetedAtBats))
+    pitchesJoin <- collect(inner_join(pitchesDF, TargetedAtBats))
     
     # score Qual and Quant mutate
     joined <- pitchesJoin %>% mutate(quant_score_des = get_quant_score(des),

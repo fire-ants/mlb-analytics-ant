@@ -2,7 +2,9 @@
 applications:
 - name: MLB-AnalyticsAnt
   instances: 0
-  buildpack: https://github.com/cloudfoundry/r-buildpack.git
+  buildpacks: 
+    - https://github.com/cloudfoundry/r-buildpack.git
+    - https://github.com/odedlaz/heroku-buildpack-awscli.git
   health-check-type: none
   command: tail -f /dev/null
   no-route: true

@@ -14,7 +14,7 @@ params:
   CF_ORG:
   CF_SPACE:
 # outputs:
-# - name: 
+# - name:
 
 run:
   path: sh
@@ -22,4 +22,12 @@ run:
     - -exc
     - |
       cf login -a api.run.pivotal.io -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
-      cf run-task MLB-AnalyticsAnt "R -f 00-AnalyticsAntMaster.R"
+      taskname=$(cf run-task MLB-AnalyticsAnt "R -f 00-AnalyticsAntMaster.R" | grep "task name" | cut -f2 -d: | xargs echo -n)
+      RUNNING=$(cf tasks MLB-AnalyticsAnt | grep "$taskname" | grep 'RUNNING')
+      echo ${RUNNING}
+      while [[ ${RUNNING} ]] ; do
+      sleep 10
+      echo ${RUNNING}
+      RUNNING=$(cf tasks MLB-AnalyticsAnt | grep "$taskname" | grep 'RUNNING')
+      done
+      echo done processing

@@ -8,17 +8,8 @@ resources:
     - ci/pipeline.yml
     - README.md
     private_key: ((git-private-key))
-- name: pcf-prod
-  type: cf
-  source:
-    api: api.run.pivotal.io
-    organization: ((cf-org))
-    space: ((cf-space))
-    username: ((cf-username))
-    password: ((cf-password))
-    skip_cert_check: false
 jobs:
-- name: build
+- name: build-deploy
   plan:
     - aggregate:
       - get: mlb-analytics-ant
@@ -27,17 +18,18 @@ jobs:
     # list directory is an placeholder for checking something before pushing to CF
     - task: list_directory
       file: mlb-analytics-ant/ci/tasks/list_directory.yml
-    - put: pcf-prod
+    - task: cf-push
+      file: mlb-analytics-ant/ci/tasks/cf_push.yml
       params:
-        manifest: mlb-analytics-ant/manifest.yml
-        path: mlb-analytics-ant
-        show_app_log: true
-        environment_variables:
-            mlb_db_dbname: ((mlb_db_dbname))
-            mlb_db_hostname: ((mlb_db_hostname))
-            mlb_db_port: ((mlb_db_port))
-            mlb_db_username: ((mlb_db_username))
-            mlb_db_password: ((mlb_db_password))
+        CF_USER: ((cf-username))
+        CF_PASSWORD: ((cf-password))
+        CF_ORG: ((cf-org))
+        CF_SPACE: ((cf-space))
+        mlb_db_dbname: ((mlb_db_dbname))
+        mlb_db_hostname: ((mlb_db_hostname))
+        mlb_db_port: ((mlb_db_port))
+        mlb_db_username: ((mlb_db_username))
+        mlb_db_password: ((mlb_db_password))
 - name: run_visualization
   plan: 
     - get: mlb-analytics-ant

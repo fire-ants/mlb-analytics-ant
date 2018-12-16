@@ -27,6 +27,7 @@ run:
     - |
       cd mlb-analytics-ant
       export CF_STAGING_TIMEOUT=30
+      printenv
       cf login -a api.run.pivotal.io -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
       cf push --no-route --health-check-type none
       cf set-env MLB-AnalyticsAnt mlb_db_dbname $mlb_db_dbname

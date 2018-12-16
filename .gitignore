@@ -8,3 +8,5 @@
 packrat/lib*/
 .pkg
 ci/pipeline-params.yml
+pipeline-params.yml
+ci_prev/

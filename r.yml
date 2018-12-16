@@ -2,17 +2,12 @@
 packages:
   - cran_mirror: https://cran.r-project.org
     packages:
-    - name: hexbin
-    - name: XML2R
-    - name: dplyr
+    - name: DBI
+    - name: RMySQL
     - name: dbplyr
-    - name: MASS
-    - name: mgcv
-    - name: tidyverse
-    - name: RColorBrewer
+    - name: dplyr
     - name: RJSONIO
     - name: RCurl
+    - name: ggplot2
     - name: akima
-  - packages:
-    - name: pitchRx
 num_threads: 4

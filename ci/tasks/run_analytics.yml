@@ -17,17 +17,18 @@ params:
 # - name:
 
 run:
-  path: sh
+  path: /bin/bash
   args:
     - -exc
     - |
       cf login -a api.run.pivotal.io -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
-      taskname=$(cf run-task MLB-AnalyticsAnt "R -f 00-AnalyticsAntMaster.R" | grep "task name" | cut -f2 -d: | xargs echo -n)
-      RUNNING=$(cf tasks MLB-AnalyticsAnt | grep "$taskname" | grep 'RUNNING')
-      echo ${RUNNING}
-      while [[ ${RUNNING} ]] ; do
+      taskname=$(cf run-task MLB-AnalyticsAnt "R -f 00-mlb-visualization.R" | grep "task name" | cut -f2 -d: | xargs echo -n)
+      IsRunning=$(cf tasks MLB-AnalyticsAnt | grep "$taskname" | grep 'RUNNING')
+      echo ${IsRunning}
+      while [[ ${IsRunning} ]] ; do
       sleep 10
-      echo ${RUNNING}
-      RUNNING=$(cf tasks MLB-AnalyticsAnt | grep "$taskname" | grep 'RUNNING')
+      IsRunning=$(cf tasks MLB-AnalyticsAnt | grep "$taskname" | grep 'RUNNING' || true)
+      echo ${IsRunning}
       done
       echo done processing
+      cf logs MLB-AnalyticsAnt --recent | grep "$taskname"

@@ -7,5 +7,5 @@ cf-space:
 mlb_db_dbname:
 mlb_db_hostname:
 mlb_db_port:
-mlb_db_username: 
-mlb_db_password: 
+mlb_db_username:
+mlb_db_password:

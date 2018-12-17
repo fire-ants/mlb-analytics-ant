@@ -1,6 +1,7 @@
 ---
 applications:
 - name: MLB-AnalyticsAnt
+  memory: 2GB
   instances: 0
   buildpacks: 
     - https://github.com/cloudfoundry/apt-buildpack

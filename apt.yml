@@ -4,3 +4,4 @@ packages:
 - libgeos-dev
 - libmysqlclient-dev
 - gdal-bin
+- libgdal-dev

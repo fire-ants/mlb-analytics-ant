@@ -8,6 +8,6 @@ packages:
 #    - name: ggplot2
     - name: DBI
 #    - name: dplyr
-#    - name: RJSONIO
+    - name: RJSONIO
 #    - name: RCurl
 num_threads: 4

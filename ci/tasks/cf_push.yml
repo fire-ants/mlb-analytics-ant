@@ -28,6 +28,8 @@ run:
       cd mlb-analytics-ant
       export CF_STAGING_TIMEOUT=30
       cf login -a api.run.pivotal.io -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
+      cf set-env MLB-AnalyticsAnt CPLUS_INCLUDE_PATH "/usr/include/gdal"
+      cf set-env MLB-AnalyticsAnt C_INCLUDE_PATH "/usr/include/gdal"
       cf push --no-route --health-check-type none -s cflinuxfs3
       cf set-env MLB-AnalyticsAnt mlb_db_dbname $mlb_db_dbname
       cf set-env MLB-AnalyticsAnt mlb_db_hostname $mlb_db_hostname

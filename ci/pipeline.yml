@@ -30,8 +30,6 @@ jobs:
         mlb_db_port: ((mlb_db_port))
         mlb_db_username: ((mlb_db_username))
         mlb_db_password: ((mlb_db_password))
-        CPLUS_INCLUDE_PATH: "/usr/include/gdal"
-        C_INCLUDE_PATH: "/usr/include/gdal"
 - name: run_visualization
   plan: 
     - get: mlb-analytics-ant

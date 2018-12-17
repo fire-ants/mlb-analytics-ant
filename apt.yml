@@ -3,4 +3,4 @@ packages:
 - libudunits2-dev
 - libgeos-dev
 - libmysqlclient-dev
-- libgdal-dev
+- gdal-bin

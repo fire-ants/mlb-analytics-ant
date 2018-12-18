@@ -2,10 +2,12 @@
 packages:
   - cran_mirror: https://cran.r-project.org
     packages:
+    - name: ggplot2
     - name: DBI
     - name: dplyr
     - name: MASS
     - name: mgcv
-    - name: ggplot2
     - name: akima
+    - name: RJSONIO
+    - name: RCurl
 num_threads: 4

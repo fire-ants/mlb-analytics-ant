@@ -1,5 +1,5 @@
-library(RJSONIO)    # used for Pulling from CF API
-library(RCurl)      # used for Pulling from CF API
+#library(RJSONIO)    # used for Pulling from CF API
+#library(RCurl)      # used for Pulling from CF API
 library(dplyr)      # working with database | also includes %>% pipe notation
 library(ggplot2)    # plotting library
 library(akima)      # used for interpolation
@@ -86,17 +86,17 @@ hvPlot <- function(mlbid, start_date, end_date) {
 }
 
 (
-# Pull batters from API
-playerAPIList <- fromJSON(getURL("http://mlb-player-api.cfapps.io/player/"))
+# # Pull batters from API
+# playerAPIList <- fromJSON(getURL("http://mlb-player-api.cfapps.io/player/"))
 
-## create a null list
-hitters <- vector("list", length(playerAPIList))
+# ## create a null list
+# hitters <- vector("list", length(playerAPIList))
 
-## populate list of batter mlbids
-for (i in 1:length(playerAPIList)) {
-    # print(playerAPIList[[i]][["mlbid"]])
-    hitters[i] <- as.character(playerAPIList[[i]][["mlbid"]])
-}
+# ## populate list of batter mlbids
+# for (i in 1:length(playerAPIList)) {
+#     # print(playerAPIList[[i]][["mlbid"]])
+#     hitters[i] <- as.character(playerAPIList[[i]][["mlbid"]])
+# }
 
 ## actually need to determine start and end dates dynamically
 ## these static values are temporary
@@ -104,7 +104,7 @@ start_date <- as.Date("04-01-17",format="%m-%d-%y")
 end_date   <- as.Date("06-01-17",format="%m-%d-%y")
 
 # mlbid in local testing working data
-# mlbid <- 519317
+hitters <- 519317
 
 for (mlbid in hitters) {
     hvPlot(mlbid, start_date, end_date)

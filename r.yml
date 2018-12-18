@@ -7,7 +7,5 @@ packages:
     - name: MASS
     - name: mgcv
     - name: ggplot2
-    - name: RJSONIO
-    - name: RCurl
     - name: akima
 num_threads: 4

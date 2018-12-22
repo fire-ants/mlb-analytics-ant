@@ -89,6 +89,8 @@ hvPlot <- function(mlbid, start_date, end_date) {
 # Pull batters from API
 playerAPIList <- fromJSON(getURL("http://mlb-player-api.cfapps.io/player/"))
 
+print(playerAPIList)
+
 # create a null list
 hitters <- vector("list", length(playerAPIList))
 

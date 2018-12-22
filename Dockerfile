@@ -2,16 +2,21 @@ FROM rocker/r-base
 
 RUN apt-get update \
 	&& apt-get install -y \
-		libssl-dev \
+		git \
+		libcurl4-openssl-dev \
 		libxml2-dev \
-		libcurl4-gnutls-dev \
 		python \
-		sqlite3 \
-		libsqlite3-dev \
-		python-pip	
-
-COPY /00-AnalyticsAntMaster.R .
+		python-pip
 
 RUN pip install awscli
+RUN git clone https://github.com/fire-ants/mlb-analytics-ant.git
 
-CMD ["Rscript", "00-AnalyticsAntMaster.R"]
+WORKDIR /mlb-analytics-ant
+
+RUN Rscript -e "install.packages('RJSONIO')"
+RUN Rscript -e "install.packages('RCurl')"
+RUN Rscript -e "install.packages('dplyr')"
+RUN Rscript -e "install.packages('ggplot2')"
+RUN Rscript -e "install.packages('akima')"
+
+CMD ["Rscript", "00-mlb-visualization.R"]

@@ -10,3 +10,7 @@ packrat/lib*/
 ci/pipeline-params.yml
 pipeline-params.yml
 ci_prev/
+local.yml
+*.cache
+*.droplet
+docker_env_file.env

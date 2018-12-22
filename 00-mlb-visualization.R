@@ -89,17 +89,17 @@ hvPlot <- function(mlbid, start_date, end_date) {
 # Pull batters from API
 playerAPIList <- fromJSON(getURL("http://mlb-player-api.cfapps.io/player/"))
 
-## create a null list
+# create a null list
 hitters <- vector("list", length(playerAPIList))
 
-## populate list of batter mlbids
+# populate list of batter mlbids
 for (i in 1:length(playerAPIList)) {
     # print(playerAPIList[[i]][["mlbid"]])
     hitters[i] <- as.character(playerAPIList[[i]][["mlbid"]])
 }
 
-## actually need to determine start and end dates dynamically
-## these static values are temporary
+# actually need to determine start and end dates dynamically
+# these static values are temporary
 start_date <- as.Date("04-01-17",format="%m-%d-%y")
 end_date   <- as.Date("06-01-17",format="%m-%d-%y")
 

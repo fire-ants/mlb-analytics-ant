@@ -1,3 +1,4 @@
+library(DBI)        # used for connecting to MySQL database
 library(RJSONIO)    # used for Pulling from CF API
 library(RCurl)      # used for Pulling from CF API
 library(dplyr)      # working with database | also includes %>% pipe notation
@@ -87,8 +88,6 @@ hvPlot <- function(mlbid, start_date, end_date) {
 
 # Pull batters from API
 playerAPIList <- fromJSON(getURL("http://mlb-player-api.cfapps.io/player/"))
-
-print(playerAPIList)
 
 # create a null list
 hitters <- vector("list", length(playerAPIList))

@@ -5,7 +5,8 @@ RUN apt-get update \
 		git \
 		libcurl4-openssl-dev \
 		libxml2-dev \
-		libmariadbclient-dev
+		libmariadbclient-dev \
+		libssl-dev
 		
 RUN git clone https://github.com/fire-ants/mlb-analytics-ant.git
 

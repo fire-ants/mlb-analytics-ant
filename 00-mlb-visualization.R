@@ -4,7 +4,7 @@ library(RCurl)      # used for Pulling from CF API
 library(dplyr)      # working with database | also includes %>% pipe notation
 library(ggplot2)    # plotting library
 library(akima)      # used for interpolation
-library(aws.s3)   # native cloudyr aws s3 api library
+library(aws.s3)     # native cloudyr aws s3 api library
 
 hvPlot <- function(mlbid, start_date, end_date) {
 

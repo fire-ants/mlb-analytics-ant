@@ -20,6 +20,8 @@ RUN Rscript -e "install.packages('RJSONIO')" \
 	&& Rscript -e "install.packages('RMySQL')" \
 	&& Rscript -e "install.packages('xml2')" \
 	&& Rscript -e "install.packages('aws.signature')" \
+	&& Rscript -e "install.packages('curl')" \
+	&& Rscript -e "install.packages('httr')" \
 	&& Rscript -e "install.packages('aws.s3', repos = c('cloudyr' = 'http://cloudyr.github.io/drat'))"
 
 CMD ["Rscript", "00-mlb-visualization.R"]

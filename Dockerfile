@@ -6,7 +6,6 @@ RUN apt-get update \
 		libcurl4-openssl-dev \
 		libxml2-dev \
 		libmariadbclient-dev \
-
 		python \
 		python-pip
 

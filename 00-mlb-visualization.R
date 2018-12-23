@@ -106,7 +106,7 @@ start_date <- as.Date("04-01-17",format="%m-%d-%y")
 end_date   <- as.Date("06-01-17",format="%m-%d-%y")
 
 # mlbid in local testing working data
-hitters <- 519317
+# hitters <- 519317
 
 for (mlbid in hitters) {
     hvPlot(mlbid, start_date, end_date)

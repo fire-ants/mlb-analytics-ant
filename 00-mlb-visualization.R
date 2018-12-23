@@ -67,7 +67,7 @@ hvPlot <- function(mlbid, start_date, end_date) {
         
             ## Push the plot to S3 bucket
             ## will need to figure out how to configure access via environmental variables
-            ## system(sprintf("aws s3api put-object --bucket mlb-pf --key %1$s --body /db/%1$s", filename))
+            system(sprintf("aws s3api put-object --bucket mlb-pf-pws --key %1$s --body /db/%1$s", filename))
         
             ## cleaning up
         
@@ -78,7 +78,7 @@ hvPlot <- function(mlbid, start_date, end_date) {
             rm(sub.PT)
         
             ## tested to work - remove local file (plot image) after pushing plot to S3 bucket
-            # file.remove(filename)
+            file.remove(filename)
         }
     }
 

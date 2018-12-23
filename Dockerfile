@@ -10,7 +10,8 @@ RUN apt-get update \
 #		python \
 #		python-pip
 
-RUN pip install awscli
+# RUN pip install awscli
+
 RUN git clone https://github.com/fire-ants/mlb-analytics-ant.git
 
 WORKDIR /mlb-analytics-ant

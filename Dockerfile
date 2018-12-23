@@ -6,7 +6,7 @@ RUN apt-get update \
 		libcurl4-openssl-dev \
 		libxml2-dev \
 		libmariadbclient-dev \
-		
+
 		python \
 		python-pip
 
@@ -23,4 +23,4 @@ RUN Rscript -e "install.packages('akima')"
 RUN Rscript -e "install.packages('DBI')"
 RUN Rscript -e "install.packages('RMySQL')"
 
-CMD ["Rscript", "00-mlb-visualization.R"]
+CMD ["pwd"]

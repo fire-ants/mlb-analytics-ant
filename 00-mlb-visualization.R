@@ -4,6 +4,7 @@ library(RCurl)      # used for Pulling from CF API
 library(dplyr)      # working with database | also includes %>% pipe notation
 library(ggplot2)    # plotting library
 library(akima)      # used for interpolation
+library("aws.s3")   # native cloudyr aws s3 api library
 
 hvPlot <- function(mlbid, start_date, end_date) {
 
@@ -67,7 +68,8 @@ hvPlot <- function(mlbid, start_date, end_date) {
         
             ## Push the plot to S3 bucket
             ## will need to figure out how to configure access via environmental variables
-            system(sprintf("aws s3api put-object --bucket mlb-pf-pws --key %1$s --body %1$s", filename))
+            # system(sprintf("aws s3api put-object --bucket mlb-pf-pws --key %1$s --body %1$s", filename))
+            put_object(file = filename, object = filename, bucket = "mlb-pf-pws")
         
             ## cleaning up
         
@@ -104,7 +106,7 @@ start_date <- as.Date("04-01-17",format="%m-%d-%y")
 end_date   <- as.Date("06-01-17",format="%m-%d-%y")
 
 # mlbid in local testing working data
-# hitters <- 519317
+hitters <- 519317
 
 for (mlbid in hitters) {
     hvPlot(mlbid, start_date, end_date)

@@ -5,9 +5,10 @@ RUN apt-get update \
 		git \
 		libcurl4-openssl-dev \
 		libxml2-dev \
-		libmariadbclient-dev \
-		python \
-		python-pip
+		libmariadbclient-dev
+		
+#		python \
+#		python-pip
 
 RUN pip install awscli
 RUN git clone https://github.com/fire-ants/mlb-analytics-ant.git
@@ -21,5 +22,6 @@ RUN Rscript -e "install.packages('ggplot2')"
 RUN Rscript -e "install.packages('akima')"
 RUN Rscript -e "install.packages('DBI')"
 RUN Rscript -e "install.packages('RMySQL')"
+RUN Rscript -e 'install.packages("aws.s3", repos = c("cloudyr" = "http://cloudyr.github.io/drat"))'
 
-CMD ["pwd"]
+CMD ["Rscript", "00-mlb-visualization.R"]

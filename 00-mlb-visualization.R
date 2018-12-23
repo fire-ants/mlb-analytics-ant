@@ -67,7 +67,7 @@ hvPlot <- function(mlbid, start_date, end_date) {
         
             ## Push the plot to S3 bucket
             ## will need to figure out how to configure access via environmental variables
-            system(sprintf("aws s3api put-object --bucket mlb-pf-pws --key %1$s --body /db/%1$s", filename))
+            system(sprintf("aws s3api put-object --bucket mlb-pf-pws --key %1$s --body %1$s", filename))
         
             ## cleaning up
         

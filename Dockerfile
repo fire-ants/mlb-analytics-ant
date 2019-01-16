@@ -1,13 +1,13 @@
 FROM rocker/r-ver:3.5.2
 
-RUN apt-get update \
-	&& apt-get install -y \
-		git \
+RUN apt update \
+	&& apt install -y \
 		libcurl4-openssl-dev \
 		libxml2-dev \
 		libmariadbclient-dev \
-		libssl-dev
-		
+		libssl-dev \
+	&& apt -y autoremove
+
 COPY /00-mlb-visualization.R .
 
 RUN Rscript -e "install.packages('RJSONIO')" \

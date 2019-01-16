@@ -2,7 +2,7 @@
 applications:
 - name: MLB-AnalyticsAnt
   memory: 2GB
-  disk_quota: 2G
+  disk_quota: 4G
   instances: 0
 #  buildpacks: 
 #    - https://github.com/cloudfoundry/apt-buildpack

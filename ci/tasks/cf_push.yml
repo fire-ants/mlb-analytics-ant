@@ -32,9 +32,11 @@ run:
       export CF_STAGING_TIMEOUT=45
       cf login -a api.run.pivotal.io -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
       cf push MLB-AnalyticsAnt --docker-image fireants/mlb-analytics-ant:latest
-      cf push --no-route --health-check-type none -s cflinuxfs3
       cf set-env MLB-AnalyticsAnt mlb_db_dbname $mlb_db_dbname
       cf set-env MLB-AnalyticsAnt mlb_db_hostname $mlb_db_hostname
       cf set-env MLB-AnalyticsAnt mlb_db_port $mlb_db_port
       cf set-env MLB-AnalyticsAnt mlb_db_username $mlb_db_username
       cf set-env MLB-AnalyticsAnt mlb_db_password $mlb_db_password
+      cf set-env MLB-AnalyticsAnt AWS_ACCESS_KEY_ID $AWS_ACCESS_KEY_ID
+      cf set-env MLB-AnalyticsAnt AWS_SECRET_ACCESS_KEY $AWS_SECRET_ACCESS_KEY
+      cf set-env MLB-AnalyticsAnt AWS_DEFAULT_REGION $AWS_DEFAULT_REGION

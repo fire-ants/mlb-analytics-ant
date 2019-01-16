@@ -8,9 +8,7 @@ RUN apt-get update \
 		libmariadbclient-dev \
 		libssl-dev
 		
-RUN git clone https://github.com/fire-ants/mlb-analytics-ant.git
-
-WORKDIR /mlb-analytics-ant
+COPY /00-mlb-visualization.R .
 
 RUN Rscript -e "install.packages('RJSONIO')" \
 	&& Rscript -e "install.packages('RCurl')" \

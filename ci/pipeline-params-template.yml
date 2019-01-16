@@ -9,3 +9,6 @@ mlb_db_hostname:
 mlb_db_port:
 mlb_db_username:
 mlb_db_password:
+AWS_ACCESS_KEY_ID: 
+AWS_SECRET_ACCESS_KEY: 
+AWS_DEFAULT_REGION: 
